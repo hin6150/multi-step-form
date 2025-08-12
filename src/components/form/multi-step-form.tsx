@@ -15,6 +15,8 @@ import Step5 from './step5'
 import { StepHeader } from '@/components/stepper/step-header'
 import { Stepper } from '@/components/stepper/stepper'
 import { useCallback } from 'react'
+import { Button } from '@/components/common/button'
+import { footerBar } from '@/components/styles/form-styles'
 
 const steps: StepItem[] = [
   { id: 0, label: '도서 기본 정보', component: Step1 },
@@ -24,15 +26,12 @@ const steps: StepItem[] = [
   { id: 4, label: '공개 여부', component: Step5 },
 ]
 
-const step1Fields: (keyof FormValues)[] = [
-  'bookTitle',
-  'author',
-  'publisher',
-  'publishedAt',
-  'status',
-  'startedAt',
-  'endedAt',
-]
+const fieldsByStep: Partial<Record<number, (keyof FormValues)[]>> = {
+  0: ['bookTitle', 'author', 'publisher', 'publishedAt', 'status', 'startedAt', 'endedAt'], // Step1
+  // 1: step2Fields,
+  // 2: step3Fields,
+  // ...
+}
 
 export default function MultiStepForm() {
   const [currentStep, setCurrentStep] = useAtom(currentStepAtom)
@@ -54,18 +53,11 @@ export default function MultiStepForm() {
   const { handleSubmit, trigger } = methods
 
   const handleNext = async () => {
-    let isValid = false
-    if (currentStep === 1) {
-      isValid = await trigger(step1Fields)
-    }
-    // TODO: 각 단계별 유효성 검사 필드 추가
-    // if (currentStep === 2) {
-    //   isValid = await trigger(step2Fields);
-    // }
+    const fields = fieldsByStep[currentStep]
+    const ok = fields ? await trigger(fields) : await trigger()
+    if (!ok) return
 
-    if (isValid) {
-      setCurrentStep((prev) => Math.min(prev + 1, steps.length))
-    }
+    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))
   }
 
   const handlePrev = () => {
@@ -76,9 +68,9 @@ export default function MultiStepForm() {
     async (next: number) => {
       if (next === currentStep) return
       const movingForward = next > currentStep
-
       if (movingForward) {
-        const ok = await trigger()
+        const fields = fieldsByStep[currentStep]
+        const ok = fields ? await trigger(fields) : await trigger()
         if (!ok) return
       }
       setCurrentStep(next)
@@ -101,18 +93,29 @@ export default function MultiStepForm() {
 
         <main>{CurrentComponent && <CurrentComponent />}</main>
 
-        <footer>
-          {currentStep > 1 && (
-            <button type="button" onClick={handlePrev}>
+        <footer css={(t) => footerBar(t)}>
+          {currentStep > 0 && (
+            <Button variant="ghost" onClick={handlePrev} fullWidth>
               이전
-            </button>
+            </Button>
           )}
-          {currentStep < steps.length && (
-            <button type="button" onClick={handleNext}>
+
+          {currentStep < steps.length - 1 && (
+            <Button
+              variant="primary"
+              onClick={handleNext}
+              fullWidth
+              // loading={isValidating} // 필요 시 RHF 상태 연동
+            >
               다음
-            </button>
+            </Button>
           )}
-          {currentStep === steps.length && <button type="submit">제출</button>}
+
+          {currentStep === steps.length - 1 && (
+            <Button variant="primary" type="submit" fullWidth>
+              제출
+            </Button>
+          )}
         </footer>
       </form>
     </FormProvider>

@@ -58,7 +58,7 @@ export default function Step1() {
       <FormInput<FormValues> name="bookTitle" label="도서 제목" placeholder="예) 클린 코드" />
       <FormInput<FormValues> name="author" label="저자" placeholder="예) 로버트 C. 마틴" />
       <FormInput<FormValues> name="publisher" label="출판사" placeholder="예) 인사이트" />
-      <FormInput<FormValues> name="publishedAt" label="출판일" type="date" />
+      <FormDateInput<FormValues> name="publishedAt" label="출판일" max={new Date().toISOString().split('T')[0]} />
 
       <FormSegmented<FormValues, ReadingStatus>
         name="status"

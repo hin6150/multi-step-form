@@ -7,8 +7,18 @@ export const sectionStyle = (theme: Theme) => css`
   background: ${theme.color.surface};
 `
 
+export const footerBar = (t: Theme) => css`
+  display: flex;
+  gap: ${t.spacing(2)};
+  margin-top: ${t.spacing(4)};
+
+  @media (max-width: 560px) {
+    flex-direction: column;
+  }
+`
+
 export const titleStyle = (theme: Theme) => css`
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 700;
   margin: ${theme.spacing(1)} 0 ${theme.spacing(4)};
   letter-spacing: -0.2px;
