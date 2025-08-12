@@ -1,36 +1,45 @@
-import { useFormContext } from 'react-hook-form'
-import { FormValues, ReadingStatus } from '@/types/form'
+import { FormValues } from '@/lib/schema'
+import { ReadingStatus } from '@/types/form'
+import { useFormContext, useWatch } from 'react-hook-form'
 
 export default function Step1() {
-  const { register } = useFormContext<FormValues>()
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<FormValues>()
+  const status = useWatch({ name: 'status' })
+
+  // 독서 상태에 따른 날짜 필드 활성화/비활성화 로직
+  const isStartedAtDisabled = status === ReadingStatus.WANT
+  const isEndedAtDisabled = status !== ReadingStatus.DONE
 
   return (
     <section>
       <h2>1단계: 도서 기본 정보 및 상태</h2>
+      {errors.status && <p style={{ color: 'red' }}>{errors.status.message}</p>}
 
       <div>
         <label htmlFor="bookTitle">도서 제목</label>
         <input id="bookTitle" {...register('bookTitle')} />
+        {errors.bookTitle && <p style={{ color: 'red' }}>{errors.bookTitle.message}</p>}
       </div>
 
       <div>
         <label htmlFor="author">저자</label>
         <input id="author" {...register('author')} />
+        {errors.author && <p style={{ color: 'red' }}>{errors.author.message}</p>}
       </div>
 
       <div>
         <label htmlFor="publisher">출판사</label>
         <input id="publisher" {...register('publisher')} />
+        {errors.publisher && <p style={{ color: 'red' }}>{errors.publisher.message}</p>}
       </div>
 
       <div>
         <label htmlFor="publishedAt">출판일</label>
         <input type="date" id="publishedAt" {...register('publishedAt')} />
-      </div>
-
-      <div>
-        <label htmlFor="totalPages">전체 페이지 수</label>
-        <input type="number" id="totalPages" {...register('totalPages')} />
+        {errors.publishedAt && <p style={{ color: 'red' }}>{errors.publishedAt.message}</p>}
       </div>
 
       <div>
@@ -55,12 +64,14 @@ export default function Step1() {
 
       <div>
         <label htmlFor="startedAt">독서 시작일</label>
-        <input type="date" id="startedAt" {...register('startedAt')} />
+        <input type="date" id="startedAt" {...register('startedAt')} disabled={isStartedAtDisabled} />
+        {errors.startedAt && <p style={{ color: 'red' }}>{errors.startedAt.message}</p>}
       </div>
 
       <div>
         <label htmlFor="endedAt">독서 종료일</label>
-        <input type="date" id="endedAt" {...register('endedAt')} />
+        <input type="date" id="endedAt" {...register('endedAt')} disabled={isEndedAtDisabled} />
+        {errors.endedAt && <p style={{ color: 'red' }}>{errors.endedAt.message}</p>}
       </div>
     </section>
   )
