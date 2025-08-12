@@ -23,7 +23,12 @@ export default function Step1() {
       <FormInput<FormValues> name="bookTitle" label="도서 제목" placeholder="예) 클린 코드" />
       <FormInput<FormValues> name="author" label="저자" placeholder="예) 로버트 C. 마틴" />
       <FormInput<FormValues> name="publisher" label="출판사" placeholder="예) 인사이트" />
-      <FormDateInput<FormValues> name="publishedAt" label="출판일" max={new Date().toISOString().split('T')[0]} />
+      <FormDateInput<FormValues>
+        name="publishedAt"
+        label="출판일"
+        affects={['startedAt']}
+        max={new Date().toISOString().split('T')[0]}
+      />
 
       <FormSegmented<FormValues, ReadingStatus>
         name="status"
@@ -32,8 +37,22 @@ export default function Step1() {
         onChange={handleStatusChange}
       />
 
-      <FormDateInput<FormValues> name="startedAt" label="독서 시작일" disabled={isStartedAtDisabled} max={startedMax} />
-      <FormDateInput<FormValues> name="endedAt" label="독서 종료일" disabled={isEndedAtDisabled} min={endedMin} />
+      <FormDateInput<FormValues>
+        name="startedAt"
+        label="독서 시작일"
+        disabled={isStartedAtDisabled}
+        max={startedMax}
+        deps={['publishedAt']}
+        affects={['endedAt']}
+      />
+
+      <FormDateInput<FormValues>
+        name="endedAt"
+        label="독서 종료일"
+        disabled={isEndedAtDisabled}
+        min={endedMin}
+        deps={['startedAt']}
+      />
     </section>
   )
 }

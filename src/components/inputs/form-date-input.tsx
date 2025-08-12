@@ -1,3 +1,4 @@
+// components/form/FormDateInput.tsx
 import { FieldValues, Path, RegisterOptions, useFormContext } from 'react-hook-form'
 import { fieldStyle, labelStyle, inputStyle, inputErrorStyle, errorText } from '@/components/styles/form-styles'
 
@@ -7,19 +8,22 @@ type Props<T extends FieldValues> = {
   disabled?: boolean
   min?: string
   max?: string
+  affects?: Path<T>[]
+  deps?: Path<T>[]
   registerOptions?: RegisterOptions<T, Path<T>>
 }
 
-function getErrorMessage(obj: any, path: string): string | undefined {
-  return path.split('.').reduce<any>((acc, key) => acc?.[key], obj)?.message
-}
+export function FormDateInput<T extends FieldValues>(props: Props<T>) {
+  const { name, label, disabled, min, max, affects, deps, registerOptions } = props
 
-export function FormDateInput<T extends FieldValues>({ name, label, disabled, min, max, registerOptions }: Props<T>) {
   const {
     register,
     formState: { errors },
+    trigger,
   } = useFormContext<T>()
-  const msg = getErrorMessage(errors, name as string)
+  const msg = name.split('.').reduce<any>((acc, k) => acc?.[k], errors)?.message
+
+  const { onChange, onBlur, ref, name: regName } = register(name, { ...registerOptions, deps })
 
   return (
     <div css={fieldStyle}>
@@ -28,12 +32,20 @@ export function FormDateInput<T extends FieldValues>({ name, label, disabled, mi
       </label>
       <input
         id={name}
+        name={regName}
         type="date"
         min={min}
         max={max}
         disabled={disabled}
+        ref={ref}
+        onBlur={onBlur}
+        onChange={async (e) => {
+          onChange(e)
+          if (affects?.length) {
+            await trigger(affects)
+          }
+        }}
         css={[inputStyle, msg && inputErrorStyle]}
-        {...register(name, registerOptions)}
       />
       {msg && <p css={errorText}>{msg}</p>}
     </div>

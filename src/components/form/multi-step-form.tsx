@@ -38,7 +38,7 @@ export default function MultiStepForm() {
 
   const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    mode: 'onBlur',
+    mode: 'onChange',
     defaultValues: {
       status: ReadingStatus.WANT,
     },
