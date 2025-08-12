@@ -1,45 +1,13 @@
-import { useCallback } from 'react'
-import { useFormContext, useWatch } from 'react-hook-form'
 import { FormValues } from '@/lib/schema'
 import { ReadingStatus } from '@/types/type'
 import { sectionStyle, titleStyle } from '@/components/styles/form-styles'
 import { FormInput } from '@/components/inputs/form-input'
 import { FormSegmented } from '@/components/inputs/form-segmented'
 import { FormDateInput } from '@/components/inputs/form-date-input'
+import { useReadingStatusRules } from '../hooks/use-reading-status-rules'
 
 export default function Step1() {
-  const { control, setValue, clearErrors, trigger } = useFormContext<FormValues>()
-
-  const status = useWatch({ name: 'status', control })
-  const startedAt = useWatch({ name: 'startedAt', control }) as string | undefined
-  const endedAt = useWatch({ name: 'endedAt', control }) as string | undefined
-
-  const isStartedAtDisabled = status === ReadingStatus.WANT
-  const isEndedAtDisabled = status !== ReadingStatus.DONE
-
-  const handleStatusChange = useCallback(
-    (next: ReadingStatus) => {
-      if (next === ReadingStatus.WANT) {
-        setValue('startedAt', undefined, { shouldDirty: true })
-        setValue('endedAt', undefined, { shouldDirty: true })
-        clearErrors(['startedAt', 'endedAt'])
-        trigger(['startedAt', 'endedAt'])
-        return
-      }
-
-      if (next === ReadingStatus.READING || next === ReadingStatus.HOLD) {
-        setValue('endedAt', undefined, { shouldDirty: true })
-        clearErrors('endedAt')
-        trigger('endedAt')
-        return
-      }
-
-      if (next === ReadingStatus.DONE) {
-        clearErrors(['startedAt', 'endedAt'])
-      }
-    },
-    [setValue, clearErrors, trigger]
-  )
+  const { isStartedAtDisabled, isEndedAtDisabled, endedMin, startedMax, handleStatusChange } = useReadingStatusRules()
 
   const statusOptions = [
     { label: '읽고 싶은 책', value: ReadingStatus.WANT },
@@ -47,9 +15,6 @@ export default function Step1() {
     { label: '읽음', value: ReadingStatus.DONE },
     { label: '보류 중', value: ReadingStatus.HOLD },
   ]
-
-  const endedMin = status === ReadingStatus.DONE && startedAt ? startedAt : undefined
-  const startedMax = status === ReadingStatus.DONE && endedAt ? endedAt : undefined
 
   return (
     <section css={sectionStyle}>

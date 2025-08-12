@@ -40,13 +40,7 @@ export default function MultiStepForm() {
     resolver: zodResolver(formSchema),
     mode: 'onBlur',
     defaultValues: {
-      bookTitle: '',
-      author: '',
-      publisher: '',
-      publishedAt: '',
       status: ReadingStatus.WANT,
-      startedAt: undefined,
-      endedAt: undefined,
     },
   })
 
@@ -101,12 +95,7 @@ export default function MultiStepForm() {
           )}
 
           {currentStep < steps.length - 1 && (
-            <Button
-              variant="primary"
-              onClick={handleNext}
-              fullWidth
-              // loading={isValidating} // 필요 시 RHF 상태 연동
-            >
+            <Button variant="primary" onClick={handleNext} fullWidth>
               다음
             </Button>
           )}
