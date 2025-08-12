@@ -1,3 +1,3 @@
 import { atom } from 'jotai'
 
-export const currentStepAtom = atom(1)
+export const currentStepAtom = atom(0)

@@ -51,7 +51,6 @@ export const appTheme: AppTheme = {
   },
 }
 
-// Emotion 테마 타입 보강
 import '@emotion/react'
 declare module '@emotion/react' {
   export interface Theme extends AppTheme {}

@@ -1,11 +1,11 @@
-import { FormValues } from '@/lib/schema'
-import { ReadingStatus } from '@/types/form'
+import { useCallback } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
+import { FormValues } from '@/lib/schema'
+import { ReadingStatus } from '@/types/type'
 import { sectionStyle, titleStyle } from '@/components/styles/form-styles'
 import { FormInput } from '@/components/inputs/form-input'
 import { FormSegmented } from '@/components/inputs/form-segmented'
-import { useCallback } from 'react'
-import { FormDateInput } from '../inputs/form-date-input'
+import { FormDateInput } from '@/components/inputs/form-date-input'
 
 export default function Step1() {
   const { control, setValue, clearErrors, trigger } = useFormContext<FormValues>()

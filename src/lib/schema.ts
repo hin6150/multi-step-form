@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ReadingStatus } from '@/types/form'
+import { ReadingStatus } from '@/types/type'
 
 export const formSchema = z
   .object({
@@ -23,17 +23,9 @@ export const formSchema = z
 
     if (status === ReadingStatus.WANT) {
       if (startedAt)
-        ctx.addIssue({
-          code: 'custom',
-          message: '읽고 싶은 책은 시작일을 입력할 수 없어요.',
-          path: ['startedAt'],
-        })
+        ctx.addIssue({ code: 'custom', message: '읽고 싶은 책은 시작일을 입력할 수 없어요.', path: ['startedAt'] })
       if (endedAt)
-        ctx.addIssue({
-          code: 'custom',
-          message: '읽고 싶은 책은 종료일을 입력할 수 없어요.',
-          path: ['endedAt'],
-        })
+        ctx.addIssue({ code: 'custom', message: '읽고 싶은 책은 종료일을 입력할 수 없어요.', path: ['endedAt'] })
     }
 
     if (status === ReadingStatus.READING || status === ReadingStatus.HOLD) {
