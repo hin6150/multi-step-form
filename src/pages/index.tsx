@@ -1,3 +1,18 @@
+import MultiStepForm from '@/components/form/multi-step-form'
+import { css } from '@emotion/react'
+
+const mainStyles = css`
+  max-width: 1024px;
+  height: 100dvh;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: white;
+`
+
 export default function Home() {
-  return <div></div>
+  return (
+    <main css={mainStyles}>
+      <MultiStepForm />
+    </main>
+  )
 }
