@@ -8,16 +8,26 @@ export enum ReadingStatus {
 export type Quote = { text: string; page?: number }
 
 export type FormValues = {
+  // Step 1
   bookTitle: string
   author: string
-  publishedAt: string // yyyy-mm-dd
+  publisher: string
+  publishedAt: string
   totalPages: number
   status: ReadingStatus
   startedAt?: string
   endedAt?: string
+
+  // Step 2
   recommend?: boolean
-  rating?: number // 0..5 step 0.5
+  rating?: number
+
+  // Step 3
   review?: string
+
+  // Step 4
   quotes: Quote[]
+
+  // Step 5
   isPublic: boolean
 }
