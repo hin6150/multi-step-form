@@ -15,9 +15,15 @@ type Props<T extends FieldValues, V extends string | number> = {
   name: Path<T>
   label: string
   options: Option<V>[]
+  onChange?: (value: V) => void
 }
 
-export function FormSegmented<T extends FieldValues, V extends string | number>({ name, label, options }: Props<T, V>) {
+export function FormSegmented<T extends FieldValues, V extends string | number>({
+  name,
+  label,
+  options,
+  onChange,
+}: Props<T, V>) {
   const { register, control } = useFormContext<T>()
   const current = useWatch({ control, name }) as unknown as V
 
@@ -27,7 +33,12 @@ export function FormSegmented<T extends FieldValues, V extends string | number>(
       <div css={segGroup}>
         {options.map((opt) => (
           <label key={String(opt.value)} css={segItem}>
-            <input type="radio" value={String(opt.value)} {...register(name)} css={visuallyHidden} />
+            <input
+              type="radio"
+              value={String(opt.value)}
+              {...register(name, { onChange: (e) => onChange?.((e.target as HTMLInputElement).value as unknown as V) })}
+              css={visuallyHidden}
+            />
             <span css={[segButton, current === opt.value && segActive]}>{opt.label}</span>
           </label>
         ))}

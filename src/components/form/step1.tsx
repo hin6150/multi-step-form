@@ -4,13 +4,52 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import { sectionStyle, titleStyle } from '@/components/styles/form-styles'
 import { FormInput } from '@/components/inputs/form-input'
 import { FormSegmented } from '@/components/inputs/form-segmented'
+import { useCallback } from 'react'
+import { FormDateInput } from '../inputs/form-date-input'
 
 export default function Step1() {
-  const { control } = useFormContext<FormValues>()
+  const { control, setValue, clearErrors, trigger } = useFormContext<FormValues>()
+
   const status = useWatch({ name: 'status', control })
+  const startedAt = useWatch({ name: 'startedAt', control }) as string | undefined
+  const endedAt = useWatch({ name: 'endedAt', control }) as string | undefined
 
   const isStartedAtDisabled = status === ReadingStatus.WANT
   const isEndedAtDisabled = status !== ReadingStatus.DONE
+
+  const handleStatusChange = useCallback(
+    (next: ReadingStatus) => {
+      if (next === ReadingStatus.WANT) {
+        setValue('startedAt', undefined, { shouldDirty: true })
+        setValue('endedAt', undefined, { shouldDirty: true })
+        clearErrors(['startedAt', 'endedAt'])
+        trigger(['startedAt', 'endedAt'])
+        return
+      }
+
+      if (next === ReadingStatus.READING || next === ReadingStatus.HOLD) {
+        setValue('endedAt', undefined, { shouldDirty: true })
+        clearErrors('endedAt')
+        trigger('endedAt')
+        return
+      }
+
+      if (next === ReadingStatus.DONE) {
+        clearErrors(['startedAt', 'endedAt'])
+      }
+    },
+    [setValue, clearErrors, trigger]
+  )
+
+  const statusOptions = [
+    { label: '읽고 싶은 책', value: ReadingStatus.WANT },
+    { label: '읽는 중', value: ReadingStatus.READING },
+    { label: '읽음', value: ReadingStatus.DONE },
+    { label: '보류 중', value: ReadingStatus.HOLD },
+  ]
+
+  const endedMin = status === ReadingStatus.DONE && startedAt ? startedAt : undefined
+  const startedMax = status === ReadingStatus.DONE && endedAt ? endedAt : undefined
 
   return (
     <section css={sectionStyle}>
@@ -24,16 +63,12 @@ export default function Step1() {
       <FormSegmented<FormValues, ReadingStatus>
         name="status"
         label="독서 상태"
-        options={[
-          { label: '읽고 싶은 책', value: ReadingStatus.WANT },
-          { label: '읽는 중', value: ReadingStatus.READING },
-          { label: '읽음', value: ReadingStatus.DONE },
-          { label: '보류 중', value: ReadingStatus.HOLD },
-        ]}
+        options={statusOptions}
+        onChange={handleStatusChange}
       />
 
-      <FormInput<FormValues> name="startedAt" label="독서 시작일" type="date" disabled={isStartedAtDisabled} />
-      <FormInput<FormValues> name="endedAt" label="독서 종료일" type="date" disabled={isEndedAtDisabled} />
+      <FormDateInput<FormValues> name="startedAt" label="독서 시작일" disabled={isStartedAtDisabled} max={startedMax} />
+      <FormDateInput<FormValues> name="endedAt" label="독서 종료일" disabled={isEndedAtDisabled} min={endedMin} />
     </section>
   )
 }
