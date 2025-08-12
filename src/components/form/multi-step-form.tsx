@@ -44,11 +44,14 @@ export default function MultiStepForm() {
     },
   })
 
-  const { handleSubmit, trigger } = methods
+  const { handleSubmit, trigger, getFieldState, formState, setFocus } = methods
 
   const handleNext = async () => {
     const fields = fieldsByStep[currentStep]
-    const ok = fields ? await trigger(fields) : await trigger()
+    const ok = fields?.length
+      ? await trigger(fields, { shouldFocus: true })
+      : await trigger(undefined, { shouldFocus: true })
+
     if (!ok) return
 
     setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))
@@ -64,7 +67,10 @@ export default function MultiStepForm() {
       const movingForward = next > currentStep
       if (movingForward) {
         const fields = fieldsByStep[currentStep]
-        const ok = fields ? await trigger(fields) : await trigger()
+        const ok = fields?.length
+          ? await trigger(fields, { shouldFocus: true })
+          : await trigger(undefined, { shouldFocus: true })
+
         if (!ok) return
       }
       setCurrentStep(next)
