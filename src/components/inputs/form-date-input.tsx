@@ -1,12 +1,5 @@
 import { FieldValues, Path, RegisterOptions, useFormContext } from 'react-hook-form'
-import {
-  fieldStyle,
-  labelStyle,
-  inputStyle,
-  inputErrorStyle,
-  disabledStyle,
-  errorText,
-} from '@/components/styles/form-styles'
+import { fieldStyle, labelStyle, inputStyle, inputErrorStyle, errorText } from '@/components/styles/form-styles'
 
 type Props<T extends FieldValues> = {
   name: Path<T>
@@ -39,7 +32,7 @@ export function FormDateInput<T extends FieldValues>({ name, label, disabled, mi
         min={min}
         max={max}
         disabled={disabled}
-        css={[inputStyle, disabled && disabledStyle, msg && inputErrorStyle]}
+        css={[inputStyle, msg && inputErrorStyle]}
         {...register(name, registerOptions)}
       />
       {msg && <p css={errorText}>{msg}</p>}

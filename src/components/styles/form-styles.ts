@@ -1,38 +1,39 @@
-import { css } from '@emotion/react'
+import { css, Theme } from '@emotion/react'
 
-export const sectionStyle = css`
+export const sectionStyle = (theme: Theme) => css`
   width: 100%;
-  padding: 20px 16px 28px;
+  padding: ${theme.spacing(5)} ${theme.spacing(4)} ${theme.spacing(7)};
   margin: 0 auto;
-  background: #fff;
+  background: ${theme.color.surface};
 `
 
-export const titleStyle = css`
+export const titleStyle = (theme: Theme) => css`
   font-size: 18px;
   font-weight: 700;
-  margin: 4px 0 16px;
+  margin: ${theme.spacing(1)} 0 ${theme.spacing(4)};
   letter-spacing: -0.2px;
 `
 
-export const fieldStyle = css`
+export const fieldStyle = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 14px;
+  gap: ${theme.spacing(2)};
+  margin-bottom: ${theme.spacing(3.5)};
 `
 
-export const labelStyle = css`
+export const labelStyle = (theme: Theme) => css`
   font-size: 14px;
-  color: #333;
+  color: ${theme.color.text};
+  opacity: 0.9;
 `
 
-export const inputStyle = css`
+export const inputStyle = (theme: Theme) => css`
   appearance: none;
   width: 100%;
-  padding: 14px 16px;
-  border: 1px solid #e6e6ea;
-  border-radius: 12px;
-  background: #f9fafb;
+  padding: ${theme.spacing(3.5)} ${theme.spacing(4)};
+  border: 1px solid ${theme.color.border};
+  border-radius: ${theme.radius.md}px;
+  background: ${theme.color.inputBg};
   font-size: 16px;
   line-height: 22px;
   outline: none;
@@ -42,44 +43,49 @@ export const inputStyle = css`
     background 0.15s ease;
 
   &:hover {
-    background: #f5f6f7;
+    background: ${theme.color.inputHover};
   }
   &:focus {
-    border-color: #5b8def;
-    box-shadow: 0 0 0 3px rgba(91, 141, 239, 0.2);
+    border-color: ${theme.color.focus};
+    box-shadow: ${theme.shadow.xs} ${theme.color.focusRing};
     background: #fff;
   }
   &::placeholder {
-    color: #a4a7ae;
+    color: ${theme.color.muted};
+  }
+  &:disabled {
+    background: ${theme.color.disabledBg};
+    border-color: ${theme.color.disabledBorder};
+    color: ${theme.color.disabledText};
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  &:disabled::placeholder {
+    color: ${theme.color.disabledPlaceholder};
   }
 `
 
-export const inputErrorStyle = css`
-  border-color: #ff5a5a;
-  box-shadow: 0 0 0 3px rgba(255, 90, 90, 0.15);
+export const inputErrorStyle = (theme: Theme) => css`
+  border-color: ${theme.color.danger};
+  box-shadow: ${theme.shadow.xs} ${theme.color.dangerRing};
   background: #fff;
 `
 
-export const disabledStyle = css`
-  opacity: 0.7;
-  background: #f1f3f5;
-  cursor: not-allowed;
-`
-
-export const errorText = css`
+export const errorText = (theme: Theme) => css`
   font-size: 12px;
-  color: #e5484d;
+  color: ${theme.color.danger};
   margin-top: -2px;
 `
 
-export const segGroup = css`
+export const segGroup = (theme: Theme) => css`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: ${theme.spacing(2)};
   @media (min-width: 560px) {
     grid-template-columns: repeat(4, 1fr);
   }
 `
+
 export const segItem = css`
   display: block;
 `
@@ -90,14 +96,15 @@ export const visuallyHidden = css`
   height: 0;
   pointer-events: none;
 `
-export const segButton = css`
+
+export const segButton = (theme: Theme) => css`
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 12px 10px;
-  border-radius: 12px;
-  border: 1px solid #e6e6ea;
+  padding: ${theme.spacing(3)} ${theme.spacing(2.5)};
+  border-radius: ${theme.radius.md}px;
+  border: 1px solid ${theme.color.border};
   background: #fff;
   font-size: 14px;
   font-weight: 600;
@@ -107,11 +114,12 @@ export const segButton = css`
     border-color 0.15s,
     box-shadow 0.15s;
   &:hover {
-    background: #f7f8fa;
+    background: ${theme.color.inputHover};
   }
 `
-export const segActive = css`
-  border-color: #5b8def;
-  box-shadow: 0 0 0 3px rgba(91, 141, 239, 0.18);
-  background: #eef4ff;
+
+export const segActive = (theme: Theme) => css`
+  border-color: ${theme.color.focus};
+  box-shadow: ${theme.shadow.xs} ${theme.color.focusRing};
+  background: ${theme.color.segActiveBg};
 `

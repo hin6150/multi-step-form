@@ -6,6 +6,7 @@ const mainStyles = css`
   height: 100dvh;
   margin: 0 auto;
   padding: 2rem;
+  background-color: white;
 `
 
 export default function Home() {
