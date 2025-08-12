@@ -1,13 +1,13 @@
-import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/document";
-import createEmotionServer from "@emotion/server/create-instance";
-import { CacheProvider } from "@emotion/react";
-import createEmotionCache from "@/lib/create-emotion-cache";
+import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document'
+import createEmotionServer from '@emotion/server/create-instance'
+import { CacheProvider } from '@emotion/react'
+import createEmotionCache from '@/lib/create-emotion-cache'
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
-    const originalRenderPage = ctx.renderPage;
-    const cache = createEmotionCache();
-    const { extractCriticalToChunks } = createEmotionServer(cache);
+    const originalRenderPage = ctx.renderPage
+    const cache = createEmotionCache()
+    const { extractCriticalToChunks } = createEmotionServer(cache)
 
     ctx.renderPage = () =>
       originalRenderPage({
@@ -17,19 +17,19 @@ export default class MyDocument extends Document {
               <CacheProvider value={cache}>
                 <App {...props} />
               </CacheProvider>
-            );
+            )
           },
-      });
+      })
 
-    const initialProps = await Document.getInitialProps(ctx);
-    const emotionChunks = extractCriticalToChunks(initialProps.html);
+    const initialProps = await Document.getInitialProps(ctx)
+    const emotionChunks = extractCriticalToChunks(initialProps.html)
     const emotionStyleTags = emotionChunks.styles.map((style) => (
       <style
-        data-emotion={`${style.key} ${style.ids.join(" ")}`}
+        data-emotion={`${style.key} ${style.ids.join(' ')}`}
         key={style.key}
         dangerouslySetInnerHTML={{ __html: style.css }}
       />
-    ));
+    ))
 
     return {
       ...initialProps,
@@ -39,7 +39,7 @@ export default class MyDocument extends Document {
           {emotionStyleTags}
         </>
       ),
-    };
+    }
   }
 
   render() {
@@ -51,6 +51,6 @@ export default class MyDocument extends Document {
           <NextScript />
         </body>
       </Html>
-    );
+    )
   }
 }
