@@ -6,7 +6,7 @@ import { FormSegmented } from '@/components/inputs/form-segmented'
 import { FormDateInput } from '@/components/inputs/form-date-input'
 import { useReadingStatusRules } from '../hooks/use-reading-status-rules'
 
-export default function Step1() {
+export default function BookDetailsStep() {
   const { isStartedAtDisabled, isEndedAtDisabled, endedMin, startedMax, handleStatusChange } = useReadingStatusRules()
 
   const statusOptions = [

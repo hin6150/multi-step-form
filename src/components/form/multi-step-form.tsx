@@ -6,11 +6,11 @@ import { ReadingStatus, StepItem } from '@/types/type'
 import { formSchema, FormValues } from '@/lib/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import Step1 from './step1'
-import Step2 from './step2'
-import Step3 from './step3'
-import Step4 from './step4'
-import Step5 from './step5'
+import BookDetailsStep from './book-details-step'
+import BookReviewStep from './book-review-step'
+import ReadingReflectionStep from './reading-reflection-step'
+import QuoteSelectionStep from './quote-selection-step'
+import VisibilitySettingsStep from './visibility-settings-step'
 
 import { StepHeader } from '@/components/stepper/step-header'
 import { Stepper } from '@/components/stepper/stepper'
@@ -19,15 +19,15 @@ import { Button } from '@/components/common/button'
 import { footerBar } from '@/components/styles/form-styles'
 
 const steps: StepItem[] = [
-  { id: 0, label: '도서 기본 정보', component: Step1 },
-  { id: 1, label: '도서 후기', component: Step2 },
-  { id: 2, label: '독후감', component: Step3 },
-  { id: 3, label: '인용구', component: Step4 },
-  { id: 4, label: '공개 여부', component: Step5 },
+  { id: 0, label: '도서 기본 정보', component: BookDetailsStep },
+  { id: 1, label: '도서 후기', component: BookReviewStep },
+  { id: 2, label: '독후감', component: ReadingReflectionStep },
+  { id: 3, label: '인용구', component: QuoteSelectionStep },
+  { id: 4, label: '공개 여부', component: VisibilitySettingsStep },
 ]
 
 const fieldsByStep: Partial<Record<number, (keyof FormValues)[]>> = {
-  0: ['bookTitle', 'author', 'publisher', 'publishedAt', 'status', 'startedAt', 'endedAt'], // Step1
+  0: ['bookTitle', 'author', 'publisher', 'publishedAt', 'status', 'startedAt', 'endedAt'], // BookDetailsStep
   // 1: step2Fields,
   // 2: step3Fields,
   // ...
