@@ -1,5 +1,5 @@
-import { titleStyle } from '@/components/styles/form-styles'
-import { headerStyle, metaStyle } from '@/components/styles/step-styles'
+import { titleStyle } from '@/styles/form-styles'
+import { headerStyle, metaStyle } from '@/styles/step-styles'
 
 type Props = {
   title: string

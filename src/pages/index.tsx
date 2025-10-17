@@ -1,4 +1,4 @@
-import MultiStepForm from '@/components/form/multi-step-form'
+import MultiStepForm from '@/features/book-form/multi-step-form'
 import { css } from '@emotion/react'
 
 const mainStyles = css`

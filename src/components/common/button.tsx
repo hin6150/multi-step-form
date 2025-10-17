@@ -1,13 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react'
-import {
-  iconLeft,
-  iconRight,
-  spinner,
-  baseStyle,
-  sizeStyle,
-  variantStyle,
-  disabledStyle,
-} from '@/components/styles/button-styles'
+import { iconLeft, iconRight, spinner, baseStyle, sizeStyle, variantStyle, disabledStyle } from '@/styles/button-styles'
 
 export type Variant = 'primary' | 'secondary' | 'ghost' | 'danger'
 export type Size = 'md' | 'lg'

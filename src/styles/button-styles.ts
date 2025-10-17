@@ -1,5 +1,5 @@
 import { css, Theme } from '@emotion/react'
-import { Size, Variant } from '../common/button'
+import { Size, Variant } from '../components/common/button'
 
 export const baseStyle = (t: Theme, fullWidth: boolean) => css`
   display: inline-flex;

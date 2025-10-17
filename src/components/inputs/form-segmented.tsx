@@ -1,13 +1,5 @@
 import { FieldValues, Path, useFormContext, useWatch } from 'react-hook-form'
-import {
-  fieldStyle,
-  labelStyle,
-  segGroup,
-  segItem,
-  visuallyHidden,
-  segButton,
-  segActive,
-} from '@/components/styles/form-styles'
+import { fieldStyle, labelStyle, segGroup, segItem, visuallyHidden, segButton, segActive } from '@/styles/form-styles'
 
 type Option<V extends string | number> = { label: string; value: V }
 

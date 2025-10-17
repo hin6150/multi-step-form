@@ -8,7 +8,7 @@ import {
   stepButton,
   circle,
   label,
-} from '@/components/styles/step-styles'
+} from '@/styles/step-styles'
 
 type Props = {
   steps: StepItem[]

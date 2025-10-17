@@ -1,6 +1,6 @@
 import { FormValues } from '@/lib/schema'
 import { ReadingStatus } from '@/types/type'
-import { sectionStyle, titleStyle } from '@/components/styles/form-styles'
+import { sectionStyle, titleStyle } from '@/styles/form-styles'
 import { FormInput } from '@/components/inputs/form-input'
 import { FormSegmented } from '@/components/inputs/form-segmented'
 import { FormDateInput } from '@/components/inputs/form-date-input'

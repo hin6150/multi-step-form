@@ -5,18 +5,17 @@ import { currentStepAtom } from '@/store/form'
 import { ReadingStatus, StepItem } from '@/types/type'
 import { formSchema, FormValues } from '@/lib/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-
-import BookDetailsStep from './book-details-step'
-import BookReviewStep from './book-review-step'
-import ReadingReflectionStep from './reading-reflection-step'
-import QuoteSelectionStep from './quote-selection-step'
-import VisibilitySettingsStep from './visibility-settings-step'
-
 import { StepHeader } from '@/components/stepper/step-header'
 import { Stepper } from '@/components/stepper/stepper'
 import { useCallback } from 'react'
 import { Button } from '@/components/common/button'
-import { footerBar } from '@/components/styles/form-styles'
+import { footerBar } from '@/styles/form-styles'
+
+import BookDetailsStep from './components/book-details-step'
+import BookReviewStep from './components/book-review-step'
+import QuoteSelectionStep from './components/quote-selection-step'
+import ReadingReflectionStep from './components/reading-reflection-step'
+import VisibilitySettingsStep from './components/visibility-settings-step'
 
 const steps: StepItem[] = [
   { id: 0, label: '도서 기본 정보', component: BookDetailsStep },

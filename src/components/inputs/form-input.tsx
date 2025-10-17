@@ -1,5 +1,5 @@
 import { FieldValues, Path, RegisterOptions, useFormContext } from 'react-hook-form'
-import { fieldStyle, labelStyle, inputStyle, inputErrorStyle, errorText } from '@/components/styles/form-styles'
+import { fieldStyle, labelStyle, inputStyle, inputErrorStyle, errorText } from '@/styles/form-styles'
 
 type Props<T extends FieldValues> = {
   name: Path<T>
