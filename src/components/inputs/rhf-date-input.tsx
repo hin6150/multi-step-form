@@ -1,4 +1,3 @@
-// components/inputs/RhfDateInput.tsx (파일명 변경)
 import { fieldStyle, labelStyle, inputStyle, inputErrorStyle, errorText } from '@/styles/form-styles'
 import { FieldValues, Path, RegisterOptions, useFormContext } from 'react-hook-form'
 

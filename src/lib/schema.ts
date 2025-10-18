@@ -1,15 +1,26 @@
 import { z } from 'zod'
 import { ReadingStatus } from '@/types/type'
 
+export const recommendationValues = ['RECOMMEND', 'NOT_RECOMMEND'] as const
+export type RecommendationValue = (typeof recommendationValues)[number]
+
 export const formSchema = z
   .object({
     bookTitle: z.string().min(1, '도서 제목을 입력해주세요.'),
     author: z.string().min(1, '저자를 입력해주세요.'),
     publisher: z.string().min(1, '출판사를 입력해주세요.'),
-    publishedAt: z.string().min(1, '출판일을 선택해주세요.'), // 기본 유효성 검사 유지
+    publishedAt: z.string().min(1, '출판일을 선택해주세요.'),
     status: z.nativeEnum(ReadingStatus),
     startedAt: z.string().optional(),
     endedAt: z.string().optional(),
+    isRecommended: z.enum(recommendationValues, { required_error: '도서 추천 여부를 선택해주세요.' }),
+    rating: z
+      .number({ invalid_type_error: '별점을 입력해주세요.' })
+      .min(0, '별점은 최소 0점입니다.')
+      .max(5, '별점은 최대 5점입니다.')
+      .refine((value) => Number.isFinite(value) && Number.isInteger(value * 2), {
+        message: '별점은 0.5점 단위로 입력해주세요.',
+      }),
   })
   .superRefine((data, ctx) => {
     const { startedAt, endedAt, publishedAt, status } = data

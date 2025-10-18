@@ -29,7 +29,7 @@ const steps: FormStep<FormValues, StepId>[] = [
     componentId: 'bookDetails',
     fields: ['bookTitle', 'author', 'publisher', 'publishedAt', 'status', 'startedAt', 'endedAt'],
   },
-  { id: 1, label: '도서 후기', componentId: 'bookReview' },
+  { id: 1, label: '도서 후기', componentId: 'bookReview', fields: ['isRecommended', 'rating'] },
   { id: 2, label: '독후감', componentId: 'readingReflection' },
   { id: 3, label: '인용구', componentId: 'quoteSelection' },
   { id: 4, label: '공개 여부', componentId: 'visibilitySettings' },
@@ -39,7 +39,7 @@ export default function MultiStepForm() {
   const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
-    defaultValues: { status: ReadingStatus.WANT },
+    defaultValues: { status: ReadingStatus.WANT, rating: 0 },
   })
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
