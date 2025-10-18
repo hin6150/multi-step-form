@@ -6,9 +6,3 @@ export enum ReadingStatus {
 }
 
 export type Quote = { text: string; page?: number }
-
-export type StepItem = {
-  id: number
-  label: string
-  component: React.ComponentType
-}
