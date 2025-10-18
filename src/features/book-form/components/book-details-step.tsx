@@ -5,16 +5,10 @@ import { FormInput } from '@/components/inputs/form-input'
 import { FormSegmented } from '@/components/inputs/form-segmented'
 import { FormDateInput } from '@/components/inputs/form-date-input'
 import { useReadingStatusRules } from '../hooks/use-reading-status-rules'
+import { statusOptions } from '../constant/constant'
 
 export default function BookDetailsStep() {
   const { isStartedAtDisabled, isEndedAtDisabled, endedMin, startedMax, handleStatusChange } = useReadingStatusRules()
-
-  const statusOptions = [
-    { label: '읽고 싶은 책', value: ReadingStatus.WANT },
-    { label: '읽는 중', value: ReadingStatus.READING },
-    { label: '읽음', value: ReadingStatus.DONE },
-    { label: '보류 중', value: ReadingStatus.HOLD },
-  ]
 
   return (
     <section css={sectionStyle}>

@@ -8,8 +8,8 @@ export function useReadingStatusRules() {
   const { control, setValue, clearErrors, trigger } = useFormContext<FormValues>()
 
   const status = useWatch({ name: 'status', control })
-  const startedAt = useWatch({ name: 'startedAt', control }) as string | undefined
-  const endedAt = useWatch({ name: 'endedAt', control }) as string | undefined
+  const startedAt = useWatch({ name: 'startedAt', control })
+  const endedAt = useWatch({ name: 'endedAt', control })
 
   const isStartedAtDisabled = status === ReadingStatus.WANT
   const isEndedAtDisabled = status !== ReadingStatus.DONE

@@ -16,6 +16,7 @@ import BookReviewStep from './components/book-review-step'
 import QuoteSelectionStep from './components/quote-selection-step'
 import ReadingReflectionStep from './components/reading-reflection-step'
 import VisibilitySettingsStep from './components/visibility-settings-step'
+import { fieldsByStep } from './constant/constant'
 
 const steps: StepItem[] = [
   { id: 0, label: '도서 기본 정보', component: BookDetailsStep },
@@ -24,13 +25,6 @@ const steps: StepItem[] = [
   { id: 3, label: '인용구', component: QuoteSelectionStep },
   { id: 4, label: '공개 여부', component: VisibilitySettingsStep },
 ]
-
-const fieldsByStep: Partial<Record<number, (keyof FormValues)[]>> = {
-  0: ['bookTitle', 'author', 'publisher', 'publishedAt', 'status', 'startedAt', 'endedAt'], // BookDetailsStep
-  // 1: step2Fields,
-  // 2: step3Fields,
-  // ...
-}
 
 export default function MultiStepForm() {
   const [currentStep, setCurrentStep] = useAtom(currentStepAtom)
