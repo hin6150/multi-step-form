@@ -1,7 +1,7 @@
 import { RhfSegmented } from '@/components/inputs/rhf-segmented'
 import { FormValues, RecommendationValue } from '@/lib/schema'
 import { sectionStyle, titleStyle } from '@/styles/form-styles'
-import { RfhRatingStars } from '@/components/inputs/rhf-rating-starts'
+import { RfhRatingStars } from '@/components/inputs/rhf-rating-stars'
 
 const recommendationOptions: { label: string; value: RecommendationValue }[] = [
   { label: '추천해요', value: 'RECOMMEND' },
