@@ -2,6 +2,8 @@ import { FormValues } from '@/lib/schema'
 import { useCallback } from 'react'
 import { useFormContext, useFieldArray, useWatch } from 'react-hook-form'
 
+const MAX_QUOTES = 5
+
 export default function useQuoteSelection() {
   const { control } = useFormContext<FormValues>()
   const { fields, append, remove } = useFieldArray<FormValues, 'quotes'>({ control, name: 'quotes' })
@@ -9,7 +11,10 @@ export default function useQuoteSelection() {
 
   const quoteCount = fields.length
 
-  const appendEmptyQuote = useCallback(() => append({ content: '', page: undefined }), [append])
+  const appendEmptyQuote = useCallback(() => {
+    if (quoteCount >= MAX_QUOTES) return
+    append({ content: '', page: undefined })
+  }, [append, quoteCount])
   const removeQuoteHandler = useCallback((index: number) => () => remove(index), [remove])
 
   return {

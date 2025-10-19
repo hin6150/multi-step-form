@@ -248,5 +248,8 @@ export const quoteHeaderStyle = (theme: Theme) => css`
 export const quoteActionsStyle = (theme: Theme) => css`
   display: flex;
   justify-content: flex-end;
-  margin-top: 12px;
+  align-items: center;
+  gap: ${theme.spacing(2)};
+  margin-top: ${theme.spacing(3)};
+  flex-wrap: wrap;
 `

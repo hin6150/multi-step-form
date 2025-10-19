@@ -24,7 +24,7 @@ export default function QuoteSelectionStep() {
       </div>
 
       <div css={quoteActionsStyle}>
-        <Button variant="secondary" onClick={appendEmptyQuote}>
+        <Button variant="secondary" onClick={appendEmptyQuote} disabled={quoteCount >= 5}>
           인용구 추가
         </Button>
       </div>

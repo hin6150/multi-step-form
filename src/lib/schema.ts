@@ -63,7 +63,10 @@ const quoteItemSchema = z.object({
 const quoteCollectionSchema = z
   .object({
     totalPages: baseBookSchema.shape.totalPages,
-    quotes: z.array(quoteItemSchema).min(1, '인용구를 최소 1개 이상 등록해주세요.'),
+    quotes: z
+      .array(quoteItemSchema)
+      .min(1, '인용구를 최소 1개 이상 등록해주세요.')
+      .max(5, '인용구는 최대 5개까지만 등록할 수 있어요.'),
   })
   .superRefine((data, ctx) => {
     const requiresPage = data.quotes.length >= 2
