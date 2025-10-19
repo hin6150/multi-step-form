@@ -2,7 +2,7 @@ import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { ReadingStatus } from '@/types/type'
-import { formSchema, FormValues, step1Schema, step2Schema, step3Schema, step4Schema } from '@/lib/schema'
+import { formSchema, FormValues, step1Schema, step2Schema, step3Schema, step4Schema, step5Schema } from '@/lib/schema'
 import { StepNavigator } from '@/components/stepper/step-navigator'
 
 import BookDetailsStep from './components/book-details-step'
@@ -51,13 +51,25 @@ const steps: FormStep<FormValues, StepId>[] = [
     fields: ['quotes'],
     schema: step4Schema,
   },
-  { id: 4, label: '공개 여부', componentId: 'visibilitySettings' },
+  {
+    id: 4,
+    label: '공개 여부',
+    componentId: 'visibilitySettings',
+    fields: ['visibility'],
+    schema: step5Schema,
+  },
 ]
+
 export default function MultiStepForm() {
   const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
-    defaultValues: { status: ReadingStatus.WANT, reflection: '', quotes: [{ content: '', page: undefined }] },
+    defaultValues: {
+      status: ReadingStatus.WANT,
+      reflection: '',
+      quotes: [{ content: '', page: undefined }],
+      visibility: 'PUBLIC',
+    },
   })
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {

@@ -4,6 +4,9 @@ import { ReadingStatus } from '@/types/type'
 export const recommendationValues = ['RECOMMEND', 'NOT_RECOMMEND'] as const
 export type RecommendationValue = (typeof recommendationValues)[number]
 
+export const visibilityValues = ['PUBLIC', 'PRIVATE'] as const
+export type VisibilityValue = (typeof visibilityValues)[number]
+
 // 1단계의 공통 필드
 const baseBookSchema = z.object({
   bookTitle: z.string().min(1, '도서 제목을 입력해주세요.'),
@@ -80,6 +83,10 @@ const quoteCollectionSchema = z
     })
   })
 
+const visibilitySchema = z.object({
+  visibility: z.enum(visibilityValues, { error: '공개 여부를 선택해주세요.' }),
+})
+
 // --- 1단계: 상태별 스키마 정의 (discriminatedUnion) ---
 const wantSchema = baseBookSchema.extend({
   status: z.literal(ReadingStatus.WANT),
@@ -144,8 +151,11 @@ export const step3Schema = reflectionSchema
 // 4단계 스키마
 export const step4Schema = quoteCollectionSchema
 
+// 5단계 스키마
+export const step5Schema = visibilitySchema
+
 // --- 최종 스키마 (전체 제출용) ---
-export const formSchema = step1Schema.and(step2Schema).and(step3Schema).and(step4Schema)
+export const formSchema = step1Schema.and(step2Schema).and(step3Schema).and(step4Schema).and(step5Schema)
 
 // 최종 FormValues 타입
 export type FormValues = z.infer<typeof formSchema>
