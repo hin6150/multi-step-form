@@ -81,9 +81,7 @@ export function RfhRatingStars<T extends FieldValues>({
             )
           })}
         </div>
-        <p css={[ratingMessage, description && ratingMessageActive, error && ratingError]}>
-          {description ?? '별점을 선택해주세요.'}
-        </p>
+        <p css={[ratingMessage, description && ratingMessageActive, error && ratingError]}>{description}</p>
       </div>
       {error && <p css={errorText}>{error.message}</p>}
     </div>

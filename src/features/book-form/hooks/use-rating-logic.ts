@@ -17,7 +17,7 @@ export function useRatingLogic({ value, onChange, onBlur, min, max, step }: UseR
   const [preview, setPreview] = useState<number | null>(null)
 
   const segmentsPerStar = useMemo(() => Math.max(1, Math.round(1 / step)), [step])
-  const currentValue = typeof value === 'number' ? value : min
+  const currentValue = typeof value === 'number' ? clamp(value, min, max) : null
 
   const computeValue = (event: MouseEvent<HTMLButtonElement>, index: number) => {
     const rect = event.currentTarget.getBoundingClientRect()
@@ -43,7 +43,7 @@ export function useRatingLogic({ value, onChange, onBlur, min, max, step }: UseR
     setPreview(null)
   }
 
-  const displayValue = clamp(preview ?? currentValue, min, max)
+  const displayValue = preview ?? currentValue ?? 0
 
   return {
     displayValue,
