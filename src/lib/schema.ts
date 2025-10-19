@@ -24,6 +24,27 @@ const reviewSchema = z.object({
     }),
 })
 
+const reflectionSchema = z
+  .object({
+    rating: reviewSchema.shape.rating.optional(),
+    reflection: z
+      .string()
+      .max(1000, '독후감은 최대 1000자까지 입력할 수 있습니다.')
+      .optional(),
+  })
+  .superRefine((data, ctx) => {
+    const shouldRequireEssay = data.rating === 1 || data.rating === 5
+    const trimmedLength = data.reflection?.trim().length ?? 0
+
+    if (shouldRequireEssay && trimmedLength < 100) {
+      ctx.addIssue({
+        code: 'custom',
+        message: '별점이 1점 또는 5점이라면 최소 100자 이상 작성해주세요.',
+        path: ['reflection'],
+      })
+    }
+  })
+
 // --- 1단계: 상태별 스키마 정의 (discriminatedUnion) ---
 const wantSchema = baseBookSchema.extend({
   status: z.literal(ReadingStatus.WANT),
@@ -82,8 +103,11 @@ export const step1Schema = z
 // 2단계 스키마
 export const step2Schema = reviewSchema
 
+// 3단계 스키마
+export const step3Schema = reflectionSchema
+
 // --- 최종 스키마 (전체 제출용) ---
-export const formSchema = step1Schema.and(step2Schema)
+export const formSchema = step1Schema.and(step2Schema).and(step3Schema)
 
 // 최종 FormValues 타입
 export type FormValues = z.infer<typeof formSchema>

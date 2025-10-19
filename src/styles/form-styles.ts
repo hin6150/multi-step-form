@@ -87,6 +87,13 @@ export const errorText = (theme: Theme) => css`
   margin-top: -2px;
 `
 
+export const textCounter = (theme: Theme) => css`
+  font-size: 13px;
+  color: ${theme.color.muted};
+  margin-top: -${theme.spacing(1)};
+  align-self: flex-end;
+`
+
 export const segGroup = (theme: Theme) => css`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
