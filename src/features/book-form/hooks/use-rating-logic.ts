@@ -28,18 +28,18 @@ export function useRatingLogic({ value, onChange, onBlur, min, max, step }: UseR
     return clamp(parseFloat(nextValue.toFixed(2)), min, max)
   }
 
-  const handleStarClick = (event: MouseEvent<HTMLButtonElement>, index: number) => {
+  const setDisplayValue = (event: MouseEvent<HTMLButtonElement>, index: number) => {
     const next = computeValue(event, index)
     onChange(next === currentValue ? min : next)
     onBlur()
     setPreview(null)
   }
 
-  const handleStarMouseMove = (_event: MouseEvent<HTMLButtonElement>, index: number) => {
+  const setPreviewValue = (_event: MouseEvent<HTMLButtonElement>, index: number) => {
     setPreview(computeValue(_event, index))
   }
 
-  const handleGroupMouseLeave = () => {
+  const setPreviewNull = () => {
     setPreview(null)
   }
 
@@ -47,8 +47,8 @@ export function useRatingLogic({ value, onChange, onBlur, min, max, step }: UseR
 
   return {
     displayValue,
-    handleStarClick,
-    handleStarMouseMove,
-    handleGroupMouseLeave,
+    setDisplayValue,
+    setPreviewValue,
+    setPreviewNull,
   }
 }

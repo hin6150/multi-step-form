@@ -43,7 +43,7 @@ export function RfhRatingStars<T extends FieldValues>({
     fieldState: { error },
   } = useController({ name, control })
 
-  const { displayValue, handleStarClick, handleStarMouseMove, handleGroupMouseLeave } = useRatingLogic({
+  const { displayValue, setDisplayValue, setPreviewValue, setPreviewNull } = useRatingLogic({
     value: field.value,
     onChange: field.onChange,
     onBlur: field.onBlur,
@@ -58,7 +58,7 @@ export function RfhRatingStars<T extends FieldValues>({
     <div css={fieldStyle}>
       <p css={labelStyle}>{label}</p>
       <div css={ratingGroup}>
-        <div css={ratingStars} onMouseLeave={handleGroupMouseLeave}>
+        <div css={ratingStars} onMouseLeave={setPreviewNull}>
           {Array.from({ length: STAR_COUNT }).map((_, index) => {
             const starValue = min + index
             const type = iconType(displayValue, starValue, step)
@@ -71,8 +71,8 @@ export function RfhRatingStars<T extends FieldValues>({
                 data-filled={isFilled ? 'true' : undefined}
                 data-error={error ? 'true' : undefined}
                 aria-label={`${starValue}점`}
-                onClick={(event) => handleStarClick(event, index)}
-                onMouseMove={(event) => handleStarMouseMove(event, index)}
+                onClick={(event) => setDisplayValue(event, index)}
+                onMouseMove={(event) => setPreviewValue(event, index)}
               >
                 {type === 'full' && <Star size={28} strokeWidth={1.5} fill="currentColor" />}
                 {type === 'half' && <StarHalf size={28} strokeWidth={1.5} fill="currentColor" />}
