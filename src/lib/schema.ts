@@ -70,7 +70,7 @@ const quoteCollectionSchema = z
         ctx.addIssue({ code: 'custom', message: '페이지 번호를 입력해주세요.', path })
         return
       }
-      if (quote.page !== undefined && quote.page >= data.totalPages) {
+      if (quote.page !== undefined && quote.page > data.totalPages) {
         ctx.addIssue({
           code: 'custom',
           message: '페이지 번호는 도서 전체 페이지 수보다 작은 값을 입력해주세요.',

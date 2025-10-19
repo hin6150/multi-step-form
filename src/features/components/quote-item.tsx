@@ -1,5 +1,5 @@
 import { Button } from '@/components/common/button'
-import { FormInput } from '@/components/inputs/form-input'
+import { RHFCommaSeparatedInput } from '@/components/inputs/rhf-comma-separated-input'
 import { FormTextArea } from '@/components/inputs/form-textarea'
 import { FormValues } from '@/lib/schema'
 import { quoteCardStyle, quoteHeaderStyle } from '@/styles/form-styles'
@@ -31,18 +31,11 @@ export function QuoteItem({ index, totalPages, showPageInput, canRemove, onRemov
       <FormTextArea<FormValues> name={contentName} label="인용구 내용" rows={4} maxLength={500} showLength />
 
       {showPageInput && (
-        <FormInput<FormValues>
+        <RHFCommaSeparatedInput<FormValues>
           name={pageName}
           label="인용구 페이지 번호"
-          type="number"
-          placeholder={totalPages ? `1 ~ ${totalPages - 1}` : '예) 120'}
-          registerOptions={{
-            setValueAs: (value) => {
-              if (value === '' || value === null || value === undefined) return undefined
-              const parsed = Number(value)
-              return Number.isNaN(parsed) ? undefined : parsed
-            },
-          }}
+          placeholder={totalPages ? `1 ~ ${totalPages}` : '예) 120'}
+          max={totalPages ? totalPages : undefined}
         />
       )}
     </div>

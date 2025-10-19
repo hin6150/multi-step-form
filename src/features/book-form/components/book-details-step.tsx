@@ -1,12 +1,13 @@
-import { FormValues } from '@/lib/schema'
-import { ReadingStatus } from '@/types/type'
 import { FormInput } from '@/components/inputs/form-input'
+import { RHFCommaSeparatedInput } from '@/components/inputs/rhf-comma-separated-input'
 import { RhfSegmented } from '@/components/inputs/rhf-segmented'
+import { RhfDateInput } from '@/components/inputs/rhf-date-input'
+import { FormValues } from '@/lib/schema'
+import { sectionStyle, titleStyle } from '@/styles/form-styles'
+import { ReadingStatus } from '@/types/type'
 
 import { useReadingStatusRules } from '../hooks/use-reading-status-rules'
 import { statusOptions } from '../constant/constant'
-import { RhfDateInput } from '@/components/inputs/rhf-date-input'
-import { sectionStyle, titleStyle } from '@/styles/form-styles'
 import { useEffect } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
@@ -40,12 +41,11 @@ export default function BookDetailStep() {
       <FormInput<FormValues> name="publisher" label="출판사" placeholder="예) 인사이트" />
 
       <RhfDateInput<FormValues> name="publishedAt" label="출판일" max={new Date().toISOString().split('T')[0]} />
-      <FormInput<FormValues>
+      <RHFCommaSeparatedInput<FormValues>
         name="totalPages"
         label="도서 전체 페이지 수"
-        type="number"
         placeholder="예) 352"
-        registerOptions={{ valueAsNumber: true, setValueAs: (value) => (value === '' ? undefined : Number(value)) }}
+        max={30000}
       />
 
       <RhfSegmented<FormValues, ReadingStatus> name="status" label="독서 상태" options={statusOptions} />
