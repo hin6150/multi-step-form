@@ -1,11 +1,13 @@
 import { useCallback, useMemo, useState } from 'react'
-import type { FieldValues, UseFormReturn } from 'react-hook-form'
+import type { FieldValues, Path, UseFormReturn } from 'react-hook-form'
+import { z } from 'zod'
 
 export type FormStep<TValues, TComponentId extends string> = {
   id: number
   label: string
   componentId: TComponentId
   fields?: (keyof TValues)[]
+  schema?: z.ZodSchema<any>
 }
 
 type UseStepControllerOptions<TValues extends FieldValues, TComponentId extends string> = {
@@ -38,17 +40,41 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
 }: UseStepControllerOptions<TValues, TComponentId>) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const totalSteps = steps.length
-  const { trigger } = methods
+  const { trigger, getValues, setError, clearErrors } = methods
 
   const validateStep = useCallback(
     async (index: number) => {
-      const fields = steps[index]?.fields
-      if (fields && fields.length > 0) {
-        return trigger(fields as any, { shouldFocus: true })
+      const currentStep = steps[index]
+      const fields = currentStep?.fields as Path<TValues>[] | undefined
+      const schema = currentStep?.schema
+
+      if (schema) {
+        const values = getValues()
+        const result = await schema.safeParseAsync(values)
+
+        if (fields) fields.forEach((field) => clearErrors(field))
+        if (!result.success) {
+          const issues = result.error.issues
+          const fieldToMessage: Record<string, string> = {}
+          issues.forEach((issue) => {
+            const key = issue.path.join('.')
+            if (key && !fieldToMessage[key]) {
+              fieldToMessage[key] = issue.message
+            }
+          })
+          Object.entries(fieldToMessage).forEach(([fieldName, message]) => {
+            const name = fieldName as Path<TValues>
+            if (message) setError(name, { type: 'manual', message })
+          })
+          return false
+        }
+        return true
       }
+
+      if (fields && fields.length > 0) return trigger(fields, { shouldFocus: true })
       return trigger(undefined, { shouldFocus: true })
     },
-    [steps, trigger]
+    [steps, trigger, getValues, setError, clearErrors]
   )
 
   const goNext = useCallback(async () => {

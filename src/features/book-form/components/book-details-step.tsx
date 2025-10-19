@@ -1,7 +1,7 @@
 import { FormValues } from '@/lib/schema'
 import { ReadingStatus } from '@/types/type'
 import { FormInput } from '@/components/inputs/form-input'
-import { FormSegmented } from '@/components/inputs/form-segmented'
+import { RhfSegmented } from '@/components/inputs/rhf-segmented'
 
 import { useReadingStatusRules } from '../hooks/use-reading-status-rules'
 import { statusOptions } from '../constant/constant'
@@ -13,18 +13,23 @@ import { useFormContext, useWatch } from 'react-hook-form'
 export default function BookDetailStep() {
   const { isStartedAtDisabled, isEndedAtDisabled, endedMin, startedMax } = useReadingStatusRules()
 
-  const { control, setValue, trigger } = useFormContext<FormValues>()
+  const { control, setValue, clearErrors } = useFormContext<FormValues>()
   const status = useWatch({ control, name: 'status' })
 
   useEffect(() => {
-    if (status === ReadingStatus.WANT) {
-      setValue('startedAt', undefined, { shouldValidate: true, shouldDirty: true })
-      setValue('endedAt', undefined, { shouldValidate: true, shouldDirty: true })
-    } else if (status === ReadingStatus.READING || status === ReadingStatus.HOLD) {
-      setValue('endedAt', undefined, { shouldValidate: true, shouldDirty: true })
-    } else if (status === ReadingStatus.DONE) {
+    switch (status) {
+      case ReadingStatus.WANT:
+        setValue('startedAt', undefined, { shouldValidate: false, shouldDirty: true })
+        setValue('endedAt', undefined, { shouldValidate: false, shouldDirty: true })
+        break
+      case ReadingStatus.READING:
+      case ReadingStatus.HOLD:
+        setValue('endedAt', undefined, { shouldValidate: false, shouldDirty: true })
+        break
     }
-  }, [status, setValue, trigger])
+
+    clearErrors(['startedAt', 'endedAt'])
+  }, [status, setValue, clearErrors])
 
   return (
     <section css={sectionStyle}>
@@ -36,23 +41,10 @@ export default function BookDetailStep() {
 
       <RhfDateInput<FormValues> name="publishedAt" label="출판일" max={new Date().toISOString().split('T')[0]} />
 
-      <FormSegmented<FormValues, ReadingStatus> name="status" label="독서 상태" options={statusOptions} />
+      <RhfSegmented<FormValues, ReadingStatus> name="status" label="독서 상태" options={statusOptions} />
 
-      <RhfDateInput<FormValues>
-        name="startedAt"
-        label="독서 시작일"
-        disabled={isStartedAtDisabled}
-        max={startedMax}
-        deps={['publishedAt']}
-      />
-
-      <RhfDateInput<FormValues>
-        name="endedAt"
-        label="독서 종료일"
-        disabled={isEndedAtDisabled}
-        min={endedMin}
-        deps={['startedAt']}
-      />
+      <RhfDateInput<FormValues> name="startedAt" label="독서 시작일" disabled={isStartedAtDisabled} max={startedMax} />
+      <RhfDateInput<FormValues> name="endedAt" label="독서 종료일" disabled={isEndedAtDisabled} min={endedMin} />
     </section>
   )
 }

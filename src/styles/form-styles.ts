@@ -32,7 +32,7 @@ export const fieldStyle = (theme: Theme) => css`
 `
 
 export const labelStyle = (theme: Theme) => css`
-  font-size: 14px;
+  font-size: 16px;
   color: ${theme.color.text};
   opacity: 0.9;
 `
@@ -82,7 +82,7 @@ export const inputErrorStyle = (theme: Theme) => css`
 `
 
 export const errorText = (theme: Theme) => css`
-  font-size: 12px;
+  font-size: 14px;
   color: ${theme.color.danger};
   margin-top: -2px;
 `
