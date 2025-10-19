@@ -13,10 +13,10 @@ export const formSchema = z
     status: z.nativeEnum(ReadingStatus),
     startedAt: z.string().optional(),
     endedAt: z.string().optional(),
-    isRecommended: z.enum(recommendationValues, { required_error: '도서 추천 여부를 선택해주세요.' }),
+    isRecommended: z.enum(recommendationValues, { message: '도서 추천 여부를 선택해주세요.' }),
     rating: z
-      .number({ invalid_type_error: '별점을 입력해주세요.' })
-      .min(0, '별점은 최소 0점입니다.')
+      .number({ message: '별점을 선택해주세요.' })
+      .min(1, '별점은 최소 1점 이상 선택해주세요.')
       .max(5, '별점은 최대 5점입니다.')
       .refine((value) => Number.isFinite(value) && Number.isInteger(value * 2), {
         message: '별점은 0.5점 단위로 입력해주세요.',

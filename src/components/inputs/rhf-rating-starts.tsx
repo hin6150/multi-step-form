@@ -23,27 +23,25 @@ type Props<T extends FieldValues> = {
 
 const STAR_COUNT = 5
 
-function iconType(value: number, index: number, min: number) {
-  const starValue = min + index + 1
+function iconType(value: number, starValue: number, step: number) {
   if (value >= starValue) return 'full'
-  if (value >= starValue - 0.5) return 'half'
+  if (step < 1 && value >= starValue - step) return 'half'
   return 'empty'
 }
 
 export function RfhRatingStars<T extends FieldValues>({
   name,
   label,
-  min = 0,
+  min = 1,
   max = 5,
   step = 0.5,
   getDescription,
 }: Props<T>) {
   const { control } = useFormContext<T>()
-  const { field, fieldState } = useController({
-    name,
-    control,
-    defaultValue: min as any,
-  })
+  const {
+    field,
+    fieldState: { error },
+  } = useController({ name, control })
 
   const { displayValue, handleStarClick, handleStarMouseMove, handleGroupMouseLeave } = useRatingLogic({
     value: field.value,
@@ -55,7 +53,6 @@ export function RfhRatingStars<T extends FieldValues>({
   })
 
   const description = getDescription?.(displayValue)
-  const hasError = Boolean(fieldState.error)
 
   return (
     <div css={fieldStyle}>
@@ -63,16 +60,17 @@ export function RfhRatingStars<T extends FieldValues>({
       <div css={ratingGroup}>
         <div css={ratingStars} onMouseLeave={handleGroupMouseLeave}>
           {Array.from({ length: STAR_COUNT }).map((_, index) => {
-            const type = iconType(displayValue, index, min)
-            const isFilled = displayValue >= min + index + step / 2
+            const starValue = min + index
+            const type = iconType(displayValue, starValue, step)
+            const isFilled = type !== 'empty'
 
             return (
               <button
                 key={index}
                 type="button"
                 data-filled={isFilled ? 'true' : undefined}
-                data-error={hasError ? 'true' : undefined}
-                aria-label={`${min + index + 1}점`}
+                data-error={error ? 'true' : undefined}
+                aria-label={`${starValue}점`}
                 onClick={(event) => handleStarClick(event, index)}
                 onMouseMove={(event) => handleStarMouseMove(event, index)}
               >
@@ -83,11 +81,11 @@ export function RfhRatingStars<T extends FieldValues>({
             )
           })}
         </div>
-        <p css={[ratingMessage, description && ratingMessageActive, hasError && ratingError]}>
+        <p css={[ratingMessage, description && ratingMessageActive, error && ratingError]}>
           {description ?? '별점을 선택해주세요.'}
         </p>
       </div>
-      {fieldState.error && <p css={errorText}>{fieldState.error.message}</p>}
+      {error && <p css={errorText}>{error.message}</p>}
     </div>
   )
 }

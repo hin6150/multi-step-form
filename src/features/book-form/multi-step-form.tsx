@@ -39,7 +39,7 @@ export default function MultiStepForm() {
   const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
-    defaultValues: { status: ReadingStatus.WANT, rating: 0 },
+    defaultValues: { status: ReadingStatus.WANT },
   })
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {

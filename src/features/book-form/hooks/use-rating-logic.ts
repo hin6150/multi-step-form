@@ -1,4 +1,4 @@
-import { useMemo, useState, MouseEvent } from 'react'
+import { useState, MouseEvent, useMemo } from 'react'
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
@@ -23,7 +23,8 @@ export function useRatingLogic({ value, onChange, onBlur, min, max, step }: UseR
     const rect = event.currentTarget.getBoundingClientRect()
     const ratio = clamp((event.clientX - rect.left) / rect.width, 0, 0.999)
     const segment = Math.min(segmentsPerStar - 1, Math.floor(ratio * segmentsPerStar))
-    const nextValue = min + index + step * (segment + 1)
+    const base = min - step
+    const nextValue = base + index + step * segment
     return clamp(parseFloat(nextValue.toFixed(2)), min, max)
   }
 
@@ -34,8 +35,8 @@ export function useRatingLogic({ value, onChange, onBlur, min, max, step }: UseR
     setPreview(null)
   }
 
-  const handleStarMouseMove = (event: MouseEvent<HTMLButtonElement>, index: number) => {
-    setPreview(computeValue(event, index))
+  const handleStarMouseMove = (_event: MouseEvent<HTMLButtonElement>, index: number) => {
+    setPreview(computeValue(_event, index))
   }
 
   const handleGroupMouseLeave = () => {
