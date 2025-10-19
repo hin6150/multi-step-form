@@ -1,5 +1,14 @@
 import { FieldValues, Path, useFormContext, useWatch } from 'react-hook-form'
-import { errorText, fieldStyle, labelStyle, segGroup, segItem, visuallyHidden, segButton, segActive } from '@/styles/form-styles'
+import {
+  errorText,
+  fieldStyle,
+  labelStyle,
+  segGroup,
+  segItem,
+  visuallyHidden,
+  segButton,
+  segActive,
+} from '@/styles/form-styles'
 
 type Option<V extends string | number> = { label: string; value: V }
 
@@ -8,18 +17,26 @@ type Props<T extends FieldValues, V extends string | number> = {
   label: string
   options: Option<V>[]
   onChange?: (value: V) => void
-  error?: string
 }
 
-export function FormSegmented<T extends FieldValues, V extends string | number>({
+export function RhfSegmented<T extends FieldValues, V extends string | number>({
   name,
   label,
   options,
   onChange,
-  error,
 }: Props<T, V>) {
-  const { register, control } = useFormContext<T>()
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext<T>()
+
   const current = useWatch({ control, name }) as unknown as V
+
+  const errorMessage = (() => {
+    const err = (errors as Record<string, any>)[name as string]
+    return typeof err?.message === 'string' ? err.message : undefined
+  })()
 
   return (
     <div css={fieldStyle}>
@@ -37,7 +54,7 @@ export function FormSegmented<T extends FieldValues, V extends string | number>(
           </label>
         ))}
       </div>
-      {error && <p css={errorText}>{error}</p>}
+      {errorMessage && <p css={errorText}>{errorMessage}</p>}
     </div>
   )
 }
