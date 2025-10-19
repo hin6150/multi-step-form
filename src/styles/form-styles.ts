@@ -225,4 +225,5 @@ export const quoteHeaderStyle = (theme: Theme) => css`
 export const quoteActionsStyle = (theme: Theme) => css`
   display: flex;
   justify-content: flex-end;
+  margin-top: 12px;
 `
