@@ -2,7 +2,7 @@ import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { ReadingStatus } from '@/types/type'
-import { formSchema, FormValues, step1Schema, step2Schema, step3Schema } from '@/lib/schema'
+import { formSchema, FormValues, step1Schema, step2Schema, step3Schema, step4Schema } from '@/lib/schema'
 import { StepNavigator } from '@/components/stepper/step-navigator'
 
 import BookDetailsStep from './components/book-details-step'
@@ -27,7 +27,7 @@ const steps: FormStep<FormValues, StepId>[] = [
     id: 0,
     label: '도서 기본 정보',
     componentId: 'bookDetails',
-    fields: ['bookTitle', 'author', 'publisher', 'publishedAt', 'status', 'startedAt', 'endedAt'],
+    fields: ['bookTitle', 'author', 'publisher', 'publishedAt', 'status', 'startedAt', 'endedAt', 'totalPages'],
     schema: step1Schema,
   },
   {
@@ -44,14 +44,20 @@ const steps: FormStep<FormValues, StepId>[] = [
     fields: ['reflection'],
     schema: step3Schema,
   },
-  { id: 3, label: '인용구', componentId: 'quoteSelection' },
+  {
+    id: 3,
+    label: '인용구',
+    componentId: 'quoteSelection',
+    fields: ['quotes'],
+    schema: step4Schema,
+  },
   { id: 4, label: '공개 여부', componentId: 'visibilitySettings' },
 ]
 export default function MultiStepForm() {
   const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
-    defaultValues: { status: ReadingStatus.WANT, reflection: '' },
+    defaultValues: { status: ReadingStatus.WANT, reflection: '', quotes: [{ content: '', page: undefined }] },
   })
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {

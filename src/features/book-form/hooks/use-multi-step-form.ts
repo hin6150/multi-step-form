@@ -6,7 +6,7 @@ export type FormStep<TValues, TComponentId extends string> = {
   id: number
   label: string
   componentId: TComponentId
-  fields?: (keyof TValues)[]
+  fields?: Path<TValues>[]
   schema?: z.ZodSchema<any>
 }
 
@@ -53,7 +53,7 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
   const validateStep = useCallback(
     async (index: number) => {
       const currentStep = steps[index]
-      const fields = currentStep?.fields as Path<TValues>[] | undefined
+      const fields = currentStep?.fields
       const schema = currentStep?.schema
 
       if (schema) {

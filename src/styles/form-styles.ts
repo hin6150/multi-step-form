@@ -199,3 +199,30 @@ export const ratingMessageActive = (theme: Theme) => css`
 export const ratingError = (theme: Theme) => css`
   color: ${theme.color.danger};
 `
+
+export const quoteListStyle = (theme: Theme) => css`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(4)};
+`
+
+export const quoteCardStyle = (theme: Theme) => css`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(3)};
+  padding: ${theme.spacing(4)};
+  border: 1px solid ${theme.color.border};
+  border-radius: ${theme.radius.md}px;
+  background: #fff;
+`
+
+export const quoteHeaderStyle = (theme: Theme) => css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+export const quoteActionsStyle = (theme: Theme) => css`
+  display: flex;
+  justify-content: flex-end;
+`

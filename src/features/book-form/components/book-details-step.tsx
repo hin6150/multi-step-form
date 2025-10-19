@@ -40,6 +40,13 @@ export default function BookDetailStep() {
       <FormInput<FormValues> name="publisher" label="출판사" placeholder="예) 인사이트" />
 
       <RhfDateInput<FormValues> name="publishedAt" label="출판일" max={new Date().toISOString().split('T')[0]} />
+      <FormInput<FormValues>
+        name="totalPages"
+        label="도서 전체 페이지 수"
+        type="number"
+        placeholder="예) 352"
+        registerOptions={{ valueAsNumber: true, setValueAs: (value) => (value === '' ? undefined : Number(value)) }}
+      />
 
       <RhfSegmented<FormValues, ReadingStatus> name="status" label="독서 상태" options={statusOptions} />
 
