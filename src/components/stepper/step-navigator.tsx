@@ -5,6 +5,8 @@ import { StepProgress } from '@/components/stepper/step-progress'
 import { StepFooter } from '@/components/stepper/step-footer'
 import { SwitchCases } from '@/components/common/switch-cases'
 
+import { stepFormLayout, stepMainArea } from '@/styles/form-styles'
+
 import { FormStep, useStepController } from '@/features/book-form/hooks/use-multi-step-form'
 
 type StepNavigatorProps<TValues extends FieldValues, TComponentId extends string> = {
@@ -27,10 +29,10 @@ export function StepNavigator<TValues extends FieldValues, TComponentId extends 
   const { step, state, meta, actions } = useStepController({ steps, methods })
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} css={stepFormLayout}>
       <StepProgress title={title} steps={meta.navigation} state={state} actions={actions} />
 
-      <main>
+      <main css={stepMainArea}>
         <SwitchCases value={step?.componentId} cases={cases} />
       </main>
 

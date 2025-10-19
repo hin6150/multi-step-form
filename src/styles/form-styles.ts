@@ -7,10 +7,31 @@ export const sectionStyle = (theme: Theme) => css`
   background: ${theme.color.surface};
 `
 
+export const stepFormLayout = css`
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+`
+
+export const stepMainArea = (t: Theme) => css`
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: ${t.spacing(3)} 0 ${t.spacing(10)};
+  scroll-padding-top: ${t.spacing(4)};
+`
+
 export const footerBar = (t: Theme) => css`
   display: flex;
   gap: ${t.spacing(2)};
-  margin-top: ${t.spacing(4)};
+  margin-top: ${t.spacing(5)};
+  background: ${t.color.surface};
+  flex-shrink: 0;
 
   @media (max-width: 560px) {
     flex-direction: column;
@@ -98,13 +119,15 @@ export const segGroup = (theme: Theme) => css`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: ${theme.spacing(2)};
+
   @media (min-width: 560px) {
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
   }
 `
 
 export const segItem = css`
   display: block;
+  flex: 1;
 `
 export const visuallyHidden = css`
   position: absolute;

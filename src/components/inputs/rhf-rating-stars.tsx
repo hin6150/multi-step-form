@@ -74,9 +74,9 @@ export function RfhRatingStars<T extends FieldValues>({
                 onClick={(event) => setDisplayValue(event, index)}
                 onMouseMove={(event) => setPreviewValue(event, index)}
               >
-                {type === 'full' && <Star size={28} strokeWidth={1.5} fill="currentColor" />}
-                {type === 'half' && <StarHalf size={28} strokeWidth={1.5} fill="currentColor" />}
-                {type === 'empty' && <Star size={28} strokeWidth={1.5} fill="none" />}
+                {type === 'full' && <Star size={36} strokeWidth={1.5} fill="currentColor" />}
+                {type === 'half' && <StarHalf size={36} strokeWidth={1.5} fill="currentColor" />}
+                {type === 'empty' && <Star size={36} strokeWidth={1.5} fill="none" />}
               </button>
             )
           })}
