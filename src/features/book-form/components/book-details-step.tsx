@@ -7,17 +7,15 @@ import { useReadingStatusRules } from '../hooks/use-reading-status-rules'
 import { statusOptions } from '../constant/constant'
 import { RhfDateInput } from '@/components/inputs/rhf-date-input'
 import { sectionStyle, titleStyle } from '@/styles/form-styles'
-import { useEffect } from 'react'
-import { useFormContext, useWatch } from 'react-hook-form'
+import { useFormContext } from 'react-hook-form'
 
 export default function BookDetailStep() {
   const { isStartedAtDisabled, isEndedAtDisabled, endedMin, startedMax } = useReadingStatusRules()
 
-  const { control, setValue, clearErrors } = useFormContext<FormValues>()
-  const status = useWatch({ control, name: 'status' })
+  const { setValue, clearErrors } = useFormContext<FormValues>()
 
-  useEffect(() => {
-    switch (status) {
+  const handleStatusChange = (nextStatus: ReadingStatus) => {
+    switch (nextStatus) {
       case ReadingStatus.WANT:
         setValue('startedAt', undefined, { shouldValidate: false, shouldDirty: true })
         setValue('endedAt', undefined, { shouldValidate: false, shouldDirty: true })
@@ -29,7 +27,7 @@ export default function BookDetailStep() {
     }
 
     clearErrors(['startedAt', 'endedAt'])
-  }, [status, setValue, clearErrors])
+  }
 
   return (
     <section css={sectionStyle}>
@@ -41,7 +39,12 @@ export default function BookDetailStep() {
 
       <RhfDateInput<FormValues> name="publishedAt" label="출판일" max={new Date().toISOString().split('T')[0]} />
 
-      <RhfSegmented<FormValues, ReadingStatus> name="status" label="독서 상태" options={statusOptions} />
+      <RhfSegmented<FormValues, ReadingStatus>
+        name="status"
+        label="독서 상태"
+        options={statusOptions}
+        onChange={handleStatusChange}
+      />
 
       <RhfDateInput<FormValues> name="startedAt" label="독서 시작일" disabled={isStartedAtDisabled} max={startedMax} />
       <RhfDateInput<FormValues> name="endedAt" label="독서 종료일" disabled={isEndedAtDisabled} min={endedMin} />

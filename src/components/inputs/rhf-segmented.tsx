@@ -10,7 +10,6 @@ import {
   segActive,
 } from '@/styles/form-styles'
 import { getErrorMessage } from '@/utils/util'
-import { Option } from 'lucide-react'
 
 type Option = { label: string; value: string }
 type Props<T extends FieldValues, V extends string> = {
