@@ -1,21 +1,23 @@
-import { useEffect, useMemo, useState } from 'react'
 import { css, Theme } from '@emotion/react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 import type { FormValues } from '@/lib/schema'
 import { ReadingStatus } from '@/types/type'
+import { Skeleton } from '@/components/common/skeleton'
 
 const previewWrapper = (theme: Theme) => css`
-  position: sticky;
-  top: ${theme.spacing(4)};
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.spacing(3)};
-  width: min(360px, 100%);
-  height: calc(100vh - ${theme.spacing(8)});
-  max-height: calc(100vh - ${theme.spacing(8)});
-  overflow: hidden;
+  display: none;
+
+  @media (min-width: 1024px) {
+    position: sticky;
+    top: ${theme.spacing(4)};
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    gap: ${theme.spacing(3)};
+    width: min(360px, 100%);
+    height: calc(100vh - ${theme.spacing(8)});
+  }
 `
 
 const previewCard = (theme: Theme) => css`
@@ -37,34 +39,15 @@ const previewCard = (theme: Theme) => css`
   }
 `
 
-const previewHeading = (theme: Theme) => css`
-  display: flex;
-  flex-direction: column;
-  gap: ${theme.spacing(0.75)};
-
-  h2 {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: ${theme.color.text};
-  }
-
-  p {
-    font-size: 14px;
-    color: ${theme.color.muted};
-  }
-`
-
 const bookMeta = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing(1)};
-  padding: ${theme.spacing(3)};
   border-radius: ${theme.radius.md}px;
   background: ${theme.color.surface};
 
   h3 {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     color: ${theme.color.text};
     margin: 0;
@@ -79,7 +62,7 @@ const bookMeta = (theme: Theme) => css`
 const bookStatus = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
-  gap: ${theme.spacing(1)};
+  gap: ${theme.spacing(4)};
 
   dt {
     font-size: 12px;
@@ -95,10 +78,31 @@ const bookStatus = (theme: Theme) => css`
   }
 `
 
+const reflectionBox = (theme: Theme) => css`
+  border-radius: ${theme.radius.md}px;
+  background: ${theme.color.surface};
+  font-size: 14px;
+  line-height: 1.6;
+  color: ${theme.color.text};
+  white-space: pre-wrap;
+  display: grid;
+  gap: ${theme.spacing(1)};
+`
+
+const sectionTitle = (theme: Theme) => css`
+  font-size: 13px;
+  font-weight: 700;
+  color: ${theme.color.muted};
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: ${theme.spacing(1)};
+`
+
 const quotesList = (theme: Theme) => css`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing(2)};
+  padding: 0;
 
   li {
     list-style: none;
@@ -121,176 +125,115 @@ const quotesList = (theme: Theme) => css`
   }
 `
 
-const emptyState = (theme: Theme) => css`
+const placeholderList = (theme: Theme) => css`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: ${theme.spacing(6)};
-  border-radius: ${theme.radius.md}px;
-  border: 1px dashed ${theme.color.border};
-  color: ${theme.color.muted};
-  font-size: 14px;
-  text-align: center;
-  line-height: 1.5;
+  flex-direction: column;
+  gap: ${theme.spacing(2)};
 `
 
-const reflectionBox = (theme: Theme) => css`
-  border-radius: ${theme.radius.md}px;
-  background: ${theme.color.surface};
-  padding: ${theme.spacing(3)};
-  font-size: 14px;
-  line-height: 1.6;
-  color: ${theme.color.text};
-  white-space: pre-wrap;
-`
-
-const sectionTitle = (theme: Theme) => css`
-  font-size: 13px;
-  font-weight: 700;
-  color: ${theme.color.muted};
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: ${theme.spacing(1)};
-`
-
-function formatStatusLabel(status: ReadingStatus) {
-  switch (status) {
-    case ReadingStatus.WANT:
-      return '읽고 싶은 책'
-    case ReadingStatus.READING:
-      return '읽는 중'
-    case ReadingStatus.HOLD:
-      return '보류 중'
-    case ReadingStatus.DONE:
-      return '완독'
-    default:
-      return status
-  }
+const statusLabel: Record<ReadingStatus, string> = {
+  [ReadingStatus.WANT]: '읽고 싶은 책',
+  [ReadingStatus.READING]: '읽는 중',
+  [ReadingStatus.HOLD]: '보류 중',
+  [ReadingStatus.DONE]: '완독',
 }
 
-function formatVisibility(value: FormValues['visibility']) {
-  if (value === 'PUBLIC') return '전체 공개'
-  if (value === 'PRIVATE') return '나만 보기'
-  return value
+const recommendationLabel: Record<FormValues['isRecommended'], string> = {
+  RECOMMEND: '추천해요',
+  NOT_RECOMMEND: '추천하지 않아요',
 }
 
-function formatRecommendation(value: FormValues['isRecommended']) {
-  if (value === 'RECOMMEND') return '추천해요'
-  if (value === 'NOT_RECOMMEND') return '추천하지 않아요'
-  return '선택하지 않았어요'
-}
-
-function getRatingLabel(rating?: number) {
-  if (!rating) return '별점을 선택해주세요.'
-  return `${rating.toFixed(1).replace('.0', '')}점`
+const visibilityLabel: Record<FormValues['visibility'], string> = {
+  PUBLIC: '전체 공개',
+  PRIVATE: '나만 보기',
 }
 
 export function FormPreviewPanel() {
   const { control } = useFormContext<FormValues>()
-  const watchedValues = useWatch<FormValues>({ control })
-
-  const [previewValues, setPreviewValues] = useState<FormValues | null>(null)
-  const [isDesktop, setIsDesktop] = useState(() => (typeof window === 'undefined' ? false : window.innerWidth >= 1024))
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 1024)
-    }
-
-    handleResize()
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
-
-  useEffect(() => {
-    const timer = setTimeout(() => setPreviewValues(watchedValues as any), 500)
-
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [watchedValues])
-
-  const formattedQuotes = useMemo(() => {
-    if (!previewValues?.quotes?.length) return []
-
-    return previewValues.quotes.filter((quote) => quote.content.trim().length > 0)
-  }, [previewValues])
-
-  if (!isDesktop) {
-    return null
-  }
+  const values = useWatch<FormValues>({ control })
+  const quotes = values?.quotes?.filter((quote: any) => quote.content.trim().length > 0) ?? []
+  const rating = typeof values?.rating === 'number' ? values.rating.toFixed(1).replace('.0', '') : null
 
   return (
     <aside css={previewWrapper}>
       <section css={previewCard}>
-        <header css={previewHeading}>
-          <h2>앱 화면 미리보기</h2>
-          <p>입력한 도서 정보가 0.5초 후 반영됩니다.</p>
-        </header>
+        <div css={bookMeta}>
+          <h3>{values?.bookTitle || <Skeleton height={18} width="70%" />}</h3>
+          <span>{values?.author || <Skeleton width="50%" />}</span>
+          <span>{values?.publisher || <Skeleton width="40%" />}</span>
+        </div>
 
-        {previewValues ? (
-          <>
-            <div css={bookMeta}>
-              <h3>{previewValues.bookTitle || '도서 제목을 입력해주세요.'}</h3>
-              <span>{previewValues.author || '저자를 입력하면 여기에 표시됩니다.'}</span>
-              <span>{previewValues.publisher || '출판사 정보는 선택 사항이에요.'}</span>
-            </div>
-
-            <dl css={bookStatus}>
-              <div>
-                <dt>상태</dt>
-                <dd>{formatStatusLabel(previewValues.status)}</dd>
-              </div>
-              <div>
-                <dt>진행 기간</dt>
-                <dd>
-                  {previewValues.startedAt
-                    ? `${previewValues.startedAt} ${previewValues.endedAt ? `~ ${previewValues.endedAt}` : ''}`
-                    : '시작일을 입력하면 여기에 표시됩니다.'}
-                </dd>
-              </div>
-              <div>
-                <dt>별점</dt>
-                <dd>{getRatingLabel(previewValues.rating)}</dd>
-              </div>
-              <div>
-                <dt>추천</dt>
-                <dd>{formatRecommendation(previewValues.isRecommended)}</dd>
-              </div>
-              <div>
-                <dt>공개 범위</dt>
-                <dd>{formatVisibility(previewValues.visibility)}</dd>
-              </div>
-            </dl>
-
-            {previewValues.reflection?.trim() ? (
-              <section css={reflectionBox}>{previewValues.reflection}</section>
-            ) : (
-              <section css={emptyState}>독후감을 작성하면 간단 요약이 여기에 나타납니다.</section>
-            )}
-
-            <section>
-              <h4 css={sectionTitle}>인용구</h4>
-              {formattedQuotes.length ? (
-                <ul css={quotesList}>
-                  {formattedQuotes.map((quote, index) => (
-                    <li key={`${quote.content}-${index}`}>
-                      <blockquote>{quote.content}</blockquote>
-                      {quote.page ? <cite>{quote.page}쪽에서 발췌</cite> : null}
-                    </li>
-                  ))}
-                </ul>
+        <dl css={bookStatus}>
+          <div>
+            <dt>출판일</dt>
+            <dd>{values?.publishedAt}</dd>
+          </div>
+          <div>
+            <dt>전체 페이지 수</dt>
+            <dd>{values?.totalPages}</dd>
+          </div>
+          <div>
+            <dt>상태</dt>
+            <dd>{values?.status ? statusLabel[values.status] : <Skeleton width="60%" />}</dd>
+          </div>
+          <div>
+            <dt>기간</dt>
+            <dd>
+              {values?.startedAt ? (
+                <>
+                  {values.startedAt}
+                  {values?.endedAt ? ` ~ ${values.endedAt}` : null}
+                </>
               ) : (
-                <div css={emptyState}>마음에 드는 문장을 추가하면 미리보기가 채워집니다.</div>
+                <Skeleton width="70%" />
               )}
-            </section>
-          </>
-        ) : (
-          <div css={emptyState}>입력한 도서 정보를 잠시 후에 미리보기로 확인할 수 있어요.</div>
-        )}
+            </dd>
+          </div>
+          <div>
+            <dt>별점</dt>
+            <dd>{rating || <Skeleton width="40%" />}</dd>
+          </div>
+          <div>
+            <dt>추천</dt>
+            <dd>{values?.isRecommended ? recommendationLabel[values.isRecommended] : <Skeleton width="50%" />}</dd>
+          </div>
+          <div>
+            <dt>공개</dt>
+            <dd>{values?.visibility ? visibilityLabel[values.visibility] : <Skeleton width="40%" />}</dd>
+          </div>
+        </dl>
+
+        <section css={reflectionBox}>
+          <h4 css={sectionTitle}>독후감</h4>
+          {values?.reflection?.trim() ? (
+            values.reflection
+          ) : (
+            <>
+              <Skeleton />
+              <Skeleton width="80%" />
+              <Skeleton width="65%" />
+            </>
+          )}
+        </section>
+
+        <section>
+          <h4 css={sectionTitle}>인용구</h4>
+          {quotes.length ? (
+            <ul css={quotesList}>
+              {quotes.map((quote, index) => (
+                <li key={`${quote.content}-${index}`}>
+                  <blockquote>{quote.content}</blockquote>
+                  {quote.page ? <cite>{quote.page}쪽</cite> : null}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div css={placeholderList}>
+              <Skeleton height={48} />
+              <Skeleton height={48} width="85%" />
+            </div>
+          )}
+        </section>
       </section>
     </aside>
   )
