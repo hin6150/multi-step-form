@@ -6,7 +6,7 @@ export type FormStep<TValues, TComponentId extends string> = {
   id: number
   label: string
   componentId: TComponentId
-  fields?: (keyof TValues)[]
+  fields?: Path<TValues>[]
   schema?: z.ZodSchema<unknown>
 }
 
@@ -41,6 +41,14 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
   const [currentIndex, setCurrentIndex] = useState(0)
   const totalSteps = steps.length
   const { trigger, getValues, setError, clearErrors } = methods
+  const clearStepErrors = useCallback(
+    (index: number) => {
+      const fields = steps[index]?.fields as Path<TValues>[] | undefined
+      if (!fields || fields.length === 0) return
+      clearErrors(fields)
+    },
+    [clearErrors, steps]
+  )
 
   const validateStep = useCallback(
     async (index: number) => {
@@ -87,13 +95,15 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
     if (currentIndex >= totalSteps - 1) return
     const ok = await validateStep(currentIndex)
     if (!ok) return
+    clearStepErrors(currentIndex)
     setCurrentIndex((prev) => Math.min(prev + 1, totalSteps - 1))
-  }, [currentIndex, totalSteps, validateStep])
+  }, [clearStepErrors, currentIndex, totalSteps, validateStep])
 
   const goPrev = useCallback(() => {
     if (currentIndex <= 0) return
+    clearStepErrors(currentIndex)
     setCurrentIndex((prev) => Math.max(prev - 1, 0))
-  }, [currentIndex])
+  }, [clearStepErrors, currentIndex])
 
   const goTo = useCallback(
     async (next: number) => {
@@ -110,9 +120,10 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
         if (!ok) return
       }
 
+      clearStepErrors(currentIndex)
       setCurrentIndex(next)
     },
-    [allowFutureClick, currentIndex, totalSteps, validateStep]
+    [allowFutureClick, clearStepErrors, currentIndex, totalSteps, validateStep]
   )
 
   const state: StepState = useMemo(

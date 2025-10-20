@@ -21,7 +21,9 @@ export const metaStyle = (t: Theme) => css`
 
 export const navStyle = (t: Theme) => css`
   width: 100%;
-  padding: ${t.spacing(3)} 0 ${t.spacing(2)};
+  padding: ${t.spacing(5)} 0 ${t.spacing(3)};
+  flex-shrink: 0;
+  background: ${t.color.surface};
 `
 
 export const progressTrack = (t: Theme) => css`

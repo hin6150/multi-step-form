@@ -79,7 +79,7 @@ function iconType(value: number, starValue: number, step: number) {
   return 'empty'
 }
 
-export function RhfRatingStars<T extends FieldValues>(props: Props<T>) {
+export function RHFRatingStars<T extends FieldValues>(props: Props<T>) {
   const { name, label, min = 1, max = 5, step = 0.5, getDescription } = props
   const { control } = useFormContext<T>()
   const {
@@ -118,9 +118,9 @@ export function RhfRatingStars<T extends FieldValues>(props: Props<T>) {
                 onClick={(event) => setDisplayValue(event, index)}
                 onMouseMove={(event) => setPreviewValue(event, index)}
               >
-                {type === 'full' && <Star size={28} strokeWidth={1.5} fill="currentColor" />}
-                {type === 'half' && <StarHalf size={28} strokeWidth={1.5} fill="currentColor" />}
-                {type === 'empty' && <Star size={28} strokeWidth={1.5} fill="none" />}
+                {type === 'full' && <Star size={36} strokeWidth={1.5} fill="currentColor" />}
+                {type === 'half' && <StarHalf size={36} strokeWidth={1.5} fill="currentColor" />}
+                {type === 'empty' && <Star size={36} strokeWidth={1.5} fill="none" />}
               </button>
             )
           })}

@@ -7,10 +7,31 @@ export const sectionStyle = (theme: Theme) => css`
   background: ${theme.color.surface};
 `
 
+export const stepFormLayout = css`
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+`
+
+export const stepMainArea = (t: Theme) => css`
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: ${t.spacing(3)} 0 ${t.spacing(10)};
+  scroll-padding-top: ${t.spacing(4)};
+`
+
 export const footerBar = (t: Theme) => css`
   display: flex;
   gap: ${t.spacing(2)};
-  margin-top: ${t.spacing(4)};
+  margin-top: ${t.spacing(5)};
+  background: ${t.color.surface};
+  flex-shrink: 0;
 
   @media (max-width: 560px) {
     flex-direction: column;
@@ -87,17 +108,26 @@ export const errorText = (theme: Theme) => css`
   margin-top: -2px;
 `
 
+export const textCounter = (theme: Theme) => css`
+  font-size: 13px;
+  color: ${theme.color.muted};
+  margin-top: -${theme.spacing(1)};
+  align-self: flex-end;
+`
+
 export const segGroup = (theme: Theme) => css`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: ${theme.spacing(2)};
+
   @media (min-width: 560px) {
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
   }
 `
 
 export const segItem = css`
   display: block;
+  flex: 1;
 `
 export const visuallyHidden = css`
   position: absolute;
@@ -191,4 +221,35 @@ export const ratingMessageActive = (theme: Theme) => css`
 
 export const ratingError = (theme: Theme) => css`
   color: ${theme.color.danger};
+`
+
+export const quoteListStyle = (theme: Theme) => css`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(4)};
+`
+
+export const quoteCardStyle = (theme: Theme) => css`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(3)};
+  padding: ${theme.spacing(4)};
+  border: 1px solid ${theme.color.border};
+  border-radius: ${theme.radius.md}px;
+  background: #fff;
+`
+
+export const quoteHeaderStyle = (theme: Theme) => css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+export const quoteActionsStyle = (theme: Theme) => css`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: ${theme.spacing(2)};
+  margin-top: ${theme.spacing(3)};
+  flex-wrap: wrap;
 `

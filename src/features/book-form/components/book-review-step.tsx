@@ -1,7 +1,7 @@
-import { RhfSegmented } from '@/components/inputs/rhf-segmented'
+import { RHFSegmented } from '@/components/rhf-inputs/rhf-segmented'
 import { FormValues, RecommendationValue } from '@/lib/schema'
 import { sectionStyle, titleStyle } from '@/styles/form-styles'
-import { RhfRatingStars } from '@/components/inputs/rhf-rating-stars'
+import { RHFRatingStars } from '@/components/rhf-inputs/rhf-rating-stars'
 
 const recommendationOptions: { label: string; value: RecommendationValue }[] = [
   { label: '추천해요', value: 'RECOMMEND' },
@@ -22,13 +22,13 @@ export default function BookReviewStep() {
     <section css={sectionStyle}>
       <h2 css={titleStyle}>2단계: 도서 후기</h2>
 
-      <RhfSegmented<FormValues, RecommendationValue>
+      <RHFSegmented<FormValues, RecommendationValue>
         name="isRecommended"
         label="이 책을 추천하시겠어요?"
         options={recommendationOptions}
       />
 
-      <RhfRatingStars<FormValues>
+      <RHFRatingStars<FormValues>
         name="rating"
         label="별점은 어떠셨나요?"
         min={1}
