@@ -13,7 +13,7 @@ function getRatingDescription(value: number) {
   if (value >= 3.5) return '좋아요'
   if (value >= 2.5) return '보통이에요'
   if (value >= 1.5) return '조금 아쉬워요'
-  if (value == 1) return '별로예요'
+  if (value === 1) return '별로예요'
   return undefined
 }
 
