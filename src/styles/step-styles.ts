@@ -23,6 +23,8 @@ export const navStyle = (t: Theme) => css`
   width: 100%;
   padding: ${t.spacing(5)} 0 ${t.spacing(3)};
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
   background: ${t.color.surface};
 `
 
@@ -105,4 +107,32 @@ export const optional = (t: Theme) => css`
   color: ${t.color.muted};
   font-weight: 500;
   font-size: 12px;
+`
+
+export const footerStyle = (t: Theme) => css`
+  display: flex;
+  gap: ${t.spacing(2)};
+  margin-top: ${t.spacing(5)};
+  flex-shrink: 0;
+  background: ${t.color.surface};
+
+  @media (max-width: 560px) {
+    flex-direction: column;
+  }
+`
+
+export const stepMainArea = (t: Theme) => css`
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  padding: ${t.spacing(3)} 0 ${t.spacing(10)};
+  scroll-padding-top: ${t.spacing(4)};
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `

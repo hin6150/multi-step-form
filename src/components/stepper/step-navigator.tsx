@@ -5,9 +5,9 @@ import { StepProgress } from '@/components/stepper/step-progress'
 import { StepFooter } from '@/components/stepper/step-footer'
 import { SwitchCases } from '@/components/common/switch-cases'
 
-import { stepFormLayout, stepMainArea } from '@/styles/form-styles'
-
 import { FormStep, useStepController } from '@/features/book-form/hooks/use-multi-step-form'
+import { stepFormLayout } from '@/styles/form-styles'
+import { stepMainArea } from '@/styles/step-styles'
 
 type StepNavigatorProps<TValues extends FieldValues, TComponentId extends string> = {
   title: string
