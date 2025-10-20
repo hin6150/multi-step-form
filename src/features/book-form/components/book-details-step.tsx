@@ -1,4 +1,4 @@
-import { FormInput } from '@/components/inputs/form-input'
+import { RhfFormInput } from '@/components/inputs/rhf-form-input'
 import { RHFCommaSeparatedInput } from '@/components/inputs/rhf-comma-separated-input'
 import { RhfSegmented } from '@/components/inputs/rhf-segmented'
 import { RhfDateInput } from '@/components/inputs/rhf-date-input'
@@ -8,17 +8,18 @@ import { ReadingStatus } from '@/types/type'
 
 import { useReadingStatusRules } from '../hooks/use-reading-status-rules'
 import { statusOptions } from '../constant/constant'
-import { useEffect } from 'react'
-import { useFormContext, useWatch } from 'react-hook-form'
+import { useFormContext } from 'react-hook-form'
+
+const getTodayDateString = () => new Date().toISOString().split('T')[0]
+const TODAY_DATE_STRING = getTodayDateString()
 
 export default function BookDetailStep() {
-  const { isStartedAtDisabled, isEndedAtDisabled, endedMin, startedMax } = useReadingStatusRules()
+  const { isStartedAtDisabled, isEndedAtDisabled, endedMin, startedMax, startedMin } = useReadingStatusRules()
 
-  const { control, setValue, clearErrors } = useFormContext<FormValues>()
-  const status = useWatch({ control, name: 'status' })
+  const { setValue, clearErrors } = useFormContext<FormValues>()
 
-  useEffect(() => {
-    switch (status) {
+  const handleStatusChange = (nextStatus: ReadingStatus) => {
+    switch (nextStatus) {
       case ReadingStatus.WANT:
         setValue('startedAt', undefined, { shouldValidate: false, shouldDirty: true })
         setValue('endedAt', undefined, { shouldValidate: false, shouldDirty: true })
@@ -30,17 +31,17 @@ export default function BookDetailStep() {
     }
 
     clearErrors(['startedAt', 'endedAt'])
-  }, [status, setValue, clearErrors])
+  }
 
   return (
     <section css={sectionStyle}>
       <h2 css={titleStyle}>1단계: 도서 기본 정보 및 상태</h2>
 
-      <FormInput<FormValues> name="bookTitle" label="도서 제목" placeholder="예) 클린 코드" />
-      <FormInput<FormValues> name="author" label="저자" placeholder="예) 로버트 C. 마틴" />
-      <FormInput<FormValues> name="publisher" label="출판사" placeholder="예) 인사이트" />
+      <RhfFormInput<FormValues> name="bookTitle" label="도서 제목" placeholder="예) 클린 코드" />
+      <RhfFormInput<FormValues> name="author" label="저자" placeholder="예) 로버트 C. 마틴" />
+      <RhfFormInput<FormValues> name="publisher" label="출판사" placeholder="예) 인사이트" />
 
-      <RhfDateInput<FormValues> name="publishedAt" label="출판일" max={new Date().toISOString().split('T')[0]} />
+      <RhfDateInput<FormValues> name="publishedAt" label="출판일" max={TODAY_DATE_STRING} />
       <RHFCommaSeparatedInput<FormValues>
         name="totalPages"
         label="도서 전체 페이지 수"
@@ -48,10 +49,28 @@ export default function BookDetailStep() {
         max={30000}
       />
 
-      <RhfSegmented<FormValues, ReadingStatus> name="status" label="독서 상태" options={statusOptions} />
+      <RhfSegmented<FormValues, ReadingStatus>
+        name="status"
+        label="독서 상태"
+        options={statusOptions}
+        onChange={handleStatusChange}
+      />
 
-      <RhfDateInput<FormValues> name="startedAt" label="독서 시작일" disabled={isStartedAtDisabled} max={startedMax} />
-      <RhfDateInput<FormValues> name="endedAt" label="독서 종료일" disabled={isEndedAtDisabled} min={endedMin} />
+      <RhfDateInput<FormValues>
+        name="startedAt"
+        label="독서 시작일"
+        disabled={isStartedAtDisabled}
+        max={startedMax ?? TODAY_DATE_STRING}
+        min={startedMin}
+      />
+
+      <RhfDateInput<FormValues>
+        name="endedAt"
+        label="독서 종료일"
+        disabled={isEndedAtDisabled}
+        min={endedMin}
+        max={TODAY_DATE_STRING}
+      />
     </section>
   )
 }

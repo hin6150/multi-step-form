@@ -7,7 +7,7 @@ export type FormStep<TValues, TComponentId extends string> = {
   label: string
   componentId: TComponentId
   fields?: Path<TValues>[]
-  schema?: z.ZodSchema<any>
+  schema?: z.ZodSchema<unknown>
 }
 
 type UseStepControllerOptions<TValues extends FieldValues, TComponentId extends string> = {
@@ -53,7 +53,13 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
   const validateStep = useCallback(
     async (index: number) => {
       const currentStep = steps[index]
-      const fields = currentStep?.fields
+
+      if (!currentStep) {
+        console.warn(`Validation skipped: Step at index ${index} is undefined.`)
+        return true
+      }
+
+      const fields = (currentStep?.fields ?? []) as Path<TValues>[]
       const schema = currentStep?.schema
 
       if (schema) {
@@ -79,7 +85,7 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
         return true
       }
 
-      if (fields && fields.length > 0) return trigger(fields, { shouldFocus: true })
+      if (fields.length > 0) return trigger(fields, { shouldFocus: true })
       return trigger(undefined, { shouldFocus: true })
     },
     [steps, trigger, getValues, setError, clearErrors]
