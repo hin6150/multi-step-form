@@ -12,7 +12,7 @@ type Props<T extends FieldValues> = {
   registerOptions?: RegisterOptions<T, Path<T>>
 }
 
-export function RhfDateInput<T extends FieldValues>(props: Props<T>) {
+export function RHFDateInput<T extends FieldValues>(props: Props<T>) {
   const { name, label, disabled, min, max, deps, registerOptions } = props
   const {
     register,

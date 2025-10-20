@@ -11,7 +11,7 @@ type Props<T extends FieldValues> = {
   registerOptions?: RegisterOptions<T, Path<T>>
 }
 
-export function RhfFormInput<T extends FieldValues>(props: Props<T>) {
+export function RHFInput<T extends FieldValues>(props: Props<T>) {
   const { name, label, type = 'text', placeholder, disabled, registerOptions } = props
   const {
     register,

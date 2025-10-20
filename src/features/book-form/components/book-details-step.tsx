@@ -1,7 +1,7 @@
-import { RhfFormInput } from '@/components/inputs/rhf-form-input'
-import { RHFCommaSeparatedInput } from '@/components/inputs/rhf-comma-separated-input'
-import { RhfSegmented } from '@/components/inputs/rhf-segmented'
-import { RhfDateInput } from '@/components/inputs/rhf-date-input'
+import { RHFInput } from '@/components/rhf-inputs/rhf-input'
+import { RHFCommaSeparatedInput } from '@/components/rhf-inputs/rhf-comma-separated-input'
+import { RHFSegmented } from '@/components/rhf-inputs/rhf-segmented'
+import { RHFDateInput } from '@/components/rhf-inputs/rhf-date-input'
 import { FormValues } from '@/lib/schema'
 import { sectionStyle, titleStyle } from '@/styles/form-styles'
 import { ReadingStatus } from '@/types/type'
@@ -37,11 +37,11 @@ export default function BookDetailStep() {
     <section css={sectionStyle}>
       <h2 css={titleStyle}>1단계: 도서 기본 정보 및 상태</h2>
 
-      <RhfFormInput<FormValues> name="bookTitle" label="도서 제목" placeholder="예) 클린 코드" />
-      <RhfFormInput<FormValues> name="author" label="저자" placeholder="예) 로버트 C. 마틴" />
-      <RhfFormInput<FormValues> name="publisher" label="출판사" placeholder="예) 인사이트" />
+      <RHFInput<FormValues> name="bookTitle" label="도서 제목" placeholder="예) 클린 코드" />
+      <RHFInput<FormValues> name="author" label="저자" placeholder="예) 로버트 C. 마틴" />
+      <RHFInput<FormValues> name="publisher" label="출판사" placeholder="예) 인사이트" />
 
-      <RhfDateInput<FormValues> name="publishedAt" label="출판일" max={TODAY_DATE_STRING} />
+      <RHFDateInput<FormValues> name="publishedAt" label="출판일" max={TODAY_DATE_STRING} />
       <RHFCommaSeparatedInput<FormValues>
         name="totalPages"
         label="도서 전체 페이지 수"
@@ -49,14 +49,14 @@ export default function BookDetailStep() {
         max={30000}
       />
 
-      <RhfSegmented<FormValues, ReadingStatus>
+      <RHFSegmented<FormValues, ReadingStatus>
         name="status"
         label="독서 상태"
         options={statusOptions}
         onChange={handleStatusChange}
       />
 
-      <RhfDateInput<FormValues>
+      <RHFDateInput<FormValues>
         name="startedAt"
         label="독서 시작일"
         disabled={isStartedAtDisabled}
@@ -64,7 +64,7 @@ export default function BookDetailStep() {
         min={startedMin}
       />
 
-      <RhfDateInput<FormValues>
+      <RHFDateInput<FormValues>
         name="endedAt"
         label="독서 종료일"
         disabled={isEndedAtDisabled}

@@ -1,5 +1,6 @@
 import { FieldValues, Path, RegisterOptions, useFormContext, useWatch } from 'react-hook-form'
 import { fieldStyle, labelStyle, inputStyle, inputErrorStyle, errorText, textCounter } from '@/styles/form-styles'
+import { getErrorMessage } from '@/utils/util'
 
 type Props<T extends FieldValues> = {
   name: Path<T>
@@ -11,28 +12,16 @@ type Props<T extends FieldValues> = {
   showLength?: boolean
 }
 
-function getErrorMessage(obj: any, path: string): string | undefined {
-  return path.split('.').reduce<any>((acc, key) => acc?.[key], obj)?.message
-}
-
-export function FormTextArea<T extends FieldValues>({
-  name,
-  label,
-  placeholder,
-  rows = 6,
-  maxLength,
-  registerOptions,
-  showLength = false,
-}: Props<T>) {
+export function RHFTextArea<T extends FieldValues>(props: Props<T>) {
+  const { name, label, placeholder, rows = 6, maxLength, registerOptions, showLength = false } = props
   const {
     register,
     control,
     formState: { errors },
   } = useFormContext<T>()
 
-  const msg = getErrorMessage(errors, name as string)
-  const value = useWatch({ control, name }) as string | undefined
-  const currentLength = value?.length ?? 0
+  const errorMessage = getErrorMessage(errors, name)
+  const currentLength = useWatch({ control, name }).length
 
   return (
     <div css={fieldStyle}>
@@ -44,16 +33,16 @@ export function FormTextArea<T extends FieldValues>({
         placeholder={placeholder}
         rows={rows}
         maxLength={maxLength}
-        css={[inputStyle, msg && inputErrorStyle]}
+        css={[inputStyle, errorMessage && inputErrorStyle]}
         {...register(name, registerOptions)}
       />
       {showLength && (
         <p css={textCounter}>
-          {currentLength}
+          {currentLength ?? 0}
           {maxLength ? ` / ${maxLength}` : '자'}
         </p>
       )}
-      {msg && <p css={errorText}>{msg}</p>}
+      {errorMessage && <p css={errorText}>{errorMessage}</p>}
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { Button } from '@/components/common/button'
-import { RHFCommaSeparatedInput } from '@/components/inputs/rhf-comma-separated-input'
-import { FormTextArea } from '@/components/inputs/form-textarea'
+import { RHFCommaSeparatedInput } from '@/components/rhf-inputs/rhf-comma-separated-input'
+import { RHFTextArea } from '@/components/rhf-inputs/rhf-textarea'
 import { FormValues } from '@/lib/schema'
 import { quoteCardStyle, quoteHeaderStyle } from '@/styles/form-styles'
 
@@ -28,7 +28,7 @@ export function QuoteItem({ index, totalPages, showPageInput, canRemove, onRemov
         </Button>
       </div>
 
-      <FormTextArea<FormValues> name={contentName} label="인용구 내용" rows={4} maxLength={500} showLength />
+      <RHFTextArea<FormValues> name={contentName} label="인용구 내용" rows={4} maxLength={500} showLength />
 
       {showPageInput && (
         <RHFCommaSeparatedInput<FormValues>

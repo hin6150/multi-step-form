@@ -19,7 +19,7 @@ type Props<T extends FieldValues, V extends string> = {
   onChange?: (value: V) => void
 }
 
-export function RhfSegmented<T extends FieldValues, V extends string>(props: Props<T, V>) {
+export function RHFSegmented<T extends FieldValues, V extends string>(props: Props<T, V>) {
   const { name, label, options, onChange } = props
   const {
     register,
