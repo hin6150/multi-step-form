@@ -79,14 +79,8 @@ function iconType(value: number, starValue: number, step: number) {
   return 'empty'
 }
 
-export function RfhRatingStars<T extends FieldValues>({
-  name,
-  label,
-  min = 1,
-  max = 5,
-  step = 0.5,
-  getDescription,
-}: Props<T>) {
+export function RhfRatingStars<T extends FieldValues>(props: Props<T>) {
+  const { name, label, min = 1, max = 5, step = 0.5, getDescription } = props
   const { control } = useFormContext<T>()
   const {
     field,

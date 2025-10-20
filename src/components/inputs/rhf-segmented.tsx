@@ -9,34 +9,27 @@ import {
   segButton,
   segActive,
 } from '@/styles/form-styles'
+import { getErrorMessage } from '@/utils/util'
+import { Option } from 'lucide-react'
 
-type Option<V extends string | number> = { label: string; value: V }
-
-type Props<T extends FieldValues, V extends string | number> = {
+type Option = { label: string; value: string }
+type Props<T extends FieldValues, V extends string> = {
   name: Path<T>
   label: string
-  options: Option<V>[]
+  options: Option[]
   onChange?: (value: V) => void
 }
 
-export function RhfSegmented<T extends FieldValues, V extends string | number>({
-  name,
-  label,
-  options,
-  onChange,
-}: Props<T, V>) {
+export function RhfSegmented<T extends FieldValues, V extends string>(props: Props<T, V>) {
+  const { name, label, options, onChange } = props
   const {
     register,
     control,
     formState: { errors },
   } = useFormContext<T>()
 
-  const current = useWatch({ control, name }) as unknown as V
-
-  const errorMessage = (() => {
-    const err = (errors as Record<string, any>)[name as string]
-    return typeof err?.message === 'string' ? err.message : undefined
-  })()
+  const current = useWatch({ control, name })
+  const errorMessage = getErrorMessage(errors, name)
 
   return (
     <div css={fieldStyle}>
@@ -47,7 +40,7 @@ export function RhfSegmented<T extends FieldValues, V extends string | number>({
             <input
               type="radio"
               value={String(opt.value)}
-              {...register(name, { onChange: (e) => onChange?.((e.target as HTMLInputElement).value as unknown as V) })}
+              {...register(name, { onChange: (e) => onChange?.(e.target.value) })}
               css={visuallyHidden}
             />
             <span css={[segButton, current === opt.value && segActive]}>{opt.label}</span>

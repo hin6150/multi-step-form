@@ -1,4 +1,5 @@
 import { fieldStyle, labelStyle, inputStyle, inputErrorStyle, errorText } from '@/styles/form-styles'
+import { getErrorMessage } from '@/utils/util'
 import { FieldValues, Path, RegisterOptions, useFormContext } from 'react-hook-form'
 
 type Props<T extends FieldValues> = {
@@ -13,12 +14,11 @@ type Props<T extends FieldValues> = {
 
 export function RhfDateInput<T extends FieldValues>(props: Props<T>) {
   const { name, label, disabled, min, max, deps, registerOptions } = props
-
   const {
     register,
     formState: { errors },
   } = useFormContext<T>()
-  const msg = name.split('.').reduce<any>((acc, k) => acc?.[k], errors)?.message
+  const errorMessage = getErrorMessage(errors, name)
 
   return (
     <div css={fieldStyle}>
@@ -31,10 +31,10 @@ export function RhfDateInput<T extends FieldValues>(props: Props<T>) {
         min={min}
         max={max}
         disabled={disabled}
-        css={[inputStyle, msg && inputErrorStyle]}
+        css={[inputStyle, errorMessage && inputErrorStyle]}
         {...register(name, { ...registerOptions, deps })}
       />
-      {msg && <p css={errorText}>{msg}</p>}
+      {errorMessage && <p css={errorText}>{errorMessage}</p>}
     </div>
   )
 }
