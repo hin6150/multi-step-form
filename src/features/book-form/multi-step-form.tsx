@@ -12,7 +12,7 @@ import ReadingReflectionStep from './components/reading-reflection-step'
 import QuoteSelectionStep from './components/quote-selection-step'
 import VisibilitySettingsStep from './components/visibility-settings-step'
 import type { FormStep } from './hooks/use-multi-step-form'
-import { FormPreviewPanel } from './components/form-preview-panel'
+import { FormPreviewPanel } from '../preview-form/component/form-preview-panel'
 
 const stepCases = {
   bookDetails: <BookDetailsStep />,

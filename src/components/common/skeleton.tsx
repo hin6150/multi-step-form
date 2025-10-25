@@ -2,7 +2,7 @@ import { css } from '@emotion/react'
 
 type SkeletonProps = {
   height?: number
-  width?: string
+  width?: string | number
 }
 
 export function Skeleton({ height = 14, width = '100%' }: SkeletonProps) {
