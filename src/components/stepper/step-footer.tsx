@@ -1,5 +1,5 @@
 import { Button } from '@/components/common/button'
-import { footerBar } from '@/styles/form-styles'
+import { footerStyle } from '@/styles/step-styles'
 
 import type { StepActions, StepState } from '@/features/book-form/hooks/use-multi-step-form'
 
@@ -19,7 +19,7 @@ export function StepFooter({
   submitLabel = '제출',
 }: StepFooterProps) {
   return (
-    <footer css={(t) => footerBar(t)}>
+    <footer css={(t) => footerStyle(t)}>
       {!state.isFirst && (
         <Button
           type="button"

@@ -2,39 +2,38 @@ import { css, Theme } from '@emotion/react'
 
 export const sectionStyle = (theme: Theme) => css`
   width: 100%;
-  padding: ${theme.spacing(5)} ${theme.spacing(4)} ${theme.spacing(7)};
-  margin: 0 auto;
-  background: ${theme.color.surface};
 `
 
-export const stepFormLayout = css`
+export const stepFormLayout = (theme: Theme) => css`
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  padding: 1rem 2rem;
+  background-color: white;
+`
+
+export const formScreenLayout = (t: Theme) => css`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
-`
+  gap: ${t.spacing(4)};
 
-export const stepMainArea = (t: Theme) => css`
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  padding: ${t.spacing(3)} 0 ${t.spacing(10)};
-  scroll-padding-top: ${t.spacing(4)};
-`
+  > * {
+    min-height: 0;
+  }
 
-export const footerBar = (t: Theme) => css`
-  display: flex;
-  gap: ${t.spacing(2)};
-  margin-top: ${t.spacing(5)};
-  background: ${t.color.surface};
-  flex-shrink: 0;
+  > form {
+    flex: 1 1 auto;
+  }
 
-  @media (max-width: 560px) {
-    flex-direction: column;
+  @media (min-width: 1024px) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 360px);
+    gap: ${t.spacing(6)};
+    align-items: stretch;
+    height: 100vh;
   }
 `
 

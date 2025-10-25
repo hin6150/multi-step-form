@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ReadingStatus } from '@/types/type'
 import { formSchema, FormValues, step1Schema, step2Schema, step3Schema, step4Schema, step5Schema } from '@/lib/schema'
 import { StepNavigator } from '@/components/stepper/step-navigator'
+import { formScreenLayout } from '@/styles/form-styles'
 
 import BookDetailsStep from './components/book-details-step'
 import BookReviewStep from './components/book-review-step'
@@ -11,6 +12,7 @@ import ReadingReflectionStep from './components/reading-reflection-step'
 import QuoteSelectionStep from './components/quote-selection-step'
 import VisibilitySettingsStep from './components/visibility-settings-step'
 import type { FormStep } from './hooks/use-multi-step-form'
+import { FormPreviewPanel } from '../preview-form/component/form-preview-panel'
 
 const stepCases = {
   bookDetails: <BookDetailsStep />,
@@ -79,7 +81,10 @@ export default function MultiStepForm() {
 
   return (
     <FormProvider {...methods}>
-      <StepNavigator title="도서 정보 입력" steps={steps} cases={stepCases} methods={methods} onSubmit={onSubmit} />
+      <div css={formScreenLayout}>
+        <StepNavigator title="도서 정보 입력" steps={steps} cases={stepCases} methods={methods} onSubmit={onSubmit} />
+        <FormPreviewPanel />
+      </div>
     </FormProvider>
   )
 }

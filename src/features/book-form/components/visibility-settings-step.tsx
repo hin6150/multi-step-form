@@ -1,11 +1,7 @@
 import { RHFSegmented } from '@/components/rhf-inputs/rhf-segmented'
 import { FormValues, VisibilityValue } from '@/lib/schema'
 import { sectionStyle, titleStyle } from '@/styles/form-styles'
-
-const visibilityOptions: { label: string; value: VisibilityValue }[] = [
-  { label: '공개', value: 'PUBLIC' },
-  { label: '비공개', value: 'PRIVATE' },
-]
+import { visibilityOptions } from '../constant/constant'
 
 export default function VisibilitySettingsStep() {
   return (
