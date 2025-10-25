@@ -2,7 +2,7 @@ import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { ReadingStatus } from '@/types/type'
-import { formSchema, FormValues } from '@/lib/schema'
+import { formSchema, FormValues, step1Schema, step2Schema, step3Schema, step4Schema, step5Schema } from '@/lib/schema'
 import { StepNavigator } from '@/components/stepper/step-navigator'
 
 import BookDetailsStep from './components/book-details-step'
@@ -27,19 +27,49 @@ const steps: FormStep<FormValues, StepId>[] = [
     id: 0,
     label: '도서 기본 정보',
     componentId: 'bookDetails',
-    fields: ['bookTitle', 'author', 'publisher', 'publishedAt', 'status', 'startedAt', 'endedAt'],
+    fields: ['bookTitle', 'author', 'publisher', 'publishedAt', 'status', 'startedAt', 'endedAt', 'totalPages'],
+    schema: step1Schema,
   },
-  { id: 1, label: '도서 후기', componentId: 'bookReview' },
-  { id: 2, label: '독후감', componentId: 'readingReflection' },
-  { id: 3, label: '인용구', componentId: 'quoteSelection' },
-  { id: 4, label: '공개 여부', componentId: 'visibilitySettings' },
+  {
+    id: 1,
+    label: '도서 후기',
+    componentId: 'bookReview',
+    fields: ['isRecommended', 'rating'],
+    schema: step2Schema,
+  },
+  {
+    id: 2,
+    label: '독후감',
+    componentId: 'readingReflection',
+    fields: ['reflection'],
+    schema: step3Schema,
+  },
+  {
+    id: 3,
+    label: '인용구',
+    componentId: 'quoteSelection',
+    fields: ['quotes'],
+    schema: step4Schema,
+  },
+  {
+    id: 4,
+    label: '공개 여부',
+    componentId: 'visibilitySettings',
+    fields: ['visibility'],
+    schema: step5Schema,
+  },
 ]
 
 export default function MultiStepForm() {
   const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     mode: 'onChange',
-    defaultValues: { status: ReadingStatus.WANT },
+    defaultValues: {
+      status: ReadingStatus.WANT,
+      reflection: '',
+      quotes: [{ content: '', page: undefined }],
+      visibility: 'PUBLIC',
+    },
   })
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {

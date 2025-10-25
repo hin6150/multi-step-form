@@ -1,5 +1,6 @@
 import { FieldValues, Path, RegisterOptions, useFormContext } from 'react-hook-form'
 import { fieldStyle, labelStyle, inputStyle, inputErrorStyle, errorText } from '@/styles/form-styles'
+import { getErrorMessage } from '@/utils/util'
 
 type Props<T extends FieldValues> = {
   name: Path<T>
@@ -10,23 +11,13 @@ type Props<T extends FieldValues> = {
   registerOptions?: RegisterOptions<T, Path<T>>
 }
 
-function getErrorMessage(obj: any, path: string): string | undefined {
-  return path.split('.').reduce<any>((acc, key) => acc?.[key], obj)?.message
-}
-
-export function FormInput<T extends FieldValues>({
-  name,
-  label,
-  type = 'text',
-  placeholder,
-  disabled,
-  registerOptions,
-}: Props<T>) {
+export function RHFInput<T extends FieldValues>(props: Props<T>) {
+  const { name, label, type = 'text', placeholder, disabled, registerOptions } = props
   const {
     register,
     formState: { errors },
   } = useFormContext<T>()
-  const msg = getErrorMessage(errors, name as string)
+  const errorMessage = getErrorMessage(errors, name)
 
   return (
     <div css={fieldStyle}>
@@ -38,10 +29,10 @@ export function FormInput<T extends FieldValues>({
         type={type}
         placeholder={placeholder}
         disabled={disabled}
-        css={[inputStyle, msg && inputErrorStyle]}
+        css={[inputStyle, errorMessage && inputErrorStyle]}
         {...register(name, registerOptions)}
       />
-      {msg && <p css={errorText}>{msg}</p>}
+      {errorMessage && <p css={errorText}>{errorMessage}</p>}
     </div>
   )
 }
