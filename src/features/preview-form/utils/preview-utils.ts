@@ -4,9 +4,27 @@ import type { DeepPartial } from 'react-hook-form'
 import type { FormValues } from '@/lib/schema'
 import { ReadingStatus } from '@/types/type'
 
+const koreanNumberFormatter = new Intl.NumberFormat('ko-KR')
+
 export type PreviewQuote = {
   content: string
   page?: number
+}
+
+export function formatNumberWithLocale(value: unknown): string | undefined {
+  if (value === null || value === undefined) {
+    return undefined
+  }
+
+  const trimmed = typeof value === 'string' ? value.trim() : undefined
+  const numericCandidate =
+    typeof value === 'number' ? value : trimmed && trimmed.length > 0 ? Number(trimmed) : Number.NaN
+
+  if (Number.isFinite(numericCandidate)) {
+    return koreanNumberFormatter.format(numericCandidate)
+  }
+
+  return trimmed && trimmed.length > 0 ? trimmed : undefined
 }
 
 export function toPreviewQuotes(quotes: DeepPartial<FormValues>['quotes']): PreviewQuote[] {
