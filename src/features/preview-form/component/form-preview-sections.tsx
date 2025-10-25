@@ -22,12 +22,10 @@ export function PreviewField({
   label,
   value,
   isVisible = true,
-  skeletonWidth = '60%',
 }: {
   label: string
   value?: ReactNode
   isVisible?: boolean
-  skeletonWidth?: number | string
 }) {
   if (!isVisible) return null
   const hasContent = hasMeaningfulValue(value)
@@ -35,7 +33,7 @@ export function PreviewField({
   return (
     <div>
       <dt>{label}</dt>
-      <dd>{hasContent ? value : <Skeleton width={skeletonWidth} />}</dd>
+      <dd>{hasContent ? value : <Skeleton width={'60%'} />}</dd>
     </div>
   )
 }

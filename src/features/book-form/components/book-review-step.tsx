@@ -2,11 +2,7 @@ import { RHFSegmented } from '@/components/rhf-inputs/rhf-segmented'
 import { FormValues, RecommendationValue } from '@/lib/schema'
 import { sectionStyle, titleStyle } from '@/styles/form-styles'
 import { RHFRatingStars } from '@/components/rhf-inputs/rhf-rating-stars'
-
-const recommendationOptions: { label: string; value: RecommendationValue }[] = [
-  { label: '추천해요', value: 'RECOMMEND' },
-  { label: '추천하지 않아요', value: 'NOT_RECOMMEND' },
-]
+import { recommendationOptions } from '../constant/constant'
 
 function getRatingDescription(value: number) {
   if (value >= 4.5) return '최고예요'

@@ -9,25 +9,9 @@ import {
   getReadablePeriod,
   toPreviewQuotes,
 } from '@/features/preview-form/utils/preview-utils'
+import { recommendationLabelMap, statusLabelMap, visibilityLabelMap } from '@/features/book-form/constant/constant'
 import { BookMetaSection, PreviewField, QuotesSection, ReflectionSection } from './form-preview-sections'
 import { previewWrapper, previewCard, bookStatus } from './form-preview-sections.styles'
-
-const statusLabel: Record<ReadingStatus, string> = {
-  [ReadingStatus.WANT]: '읽고 싶은 책',
-  [ReadingStatus.READING]: '읽는 중',
-  [ReadingStatus.HOLD]: '보류 중',
-  [ReadingStatus.DONE]: '완독',
-}
-
-const recommendationLabel: Record<FormValues['isRecommended'], string> = {
-  RECOMMEND: '추천해요',
-  NOT_RECOMMEND: '추천하지 않아요',
-}
-
-const visibilityLabel: Record<FormValues['visibility'], string> = {
-  PUBLIC: '전체 공개',
-  PRIVATE: '나만 보기',
-}
 
 export function FormPreviewPanel() {
   const { control } = useFormContext<FormValues>()
@@ -47,18 +31,16 @@ export function FormPreviewPanel() {
         <dl css={bookStatus}>
           <PreviewField label="출판일" value={previewValues?.publishedAt} />
           <PreviewField label="전체 페이지 수" value={totalPages} />
-          <PreviewField label="상태" value={previewValues?.status ? statusLabel[previewValues.status] : undefined} />
+          <PreviewField label="상태" value={previewValues?.status ? statusLabelMap[previewValues.status] : undefined} />
           <PreviewField label="기간" value={periodText} isVisible={shouldShowPeriod} />
-          <PreviewField label="별점" value={rating} skeletonWidth="40%" />
+          <PreviewField label="별점" value={rating} />
           <PreviewField
             label="추천"
-            value={previewValues?.isRecommended ? recommendationLabel[previewValues.isRecommended] : undefined}
-            skeletonWidth="50%"
+            value={previewValues?.isRecommended ? recommendationLabelMap[previewValues.isRecommended] : undefined}
           />
           <PreviewField
             label="공개"
-            value={previewValues?.visibility ? visibilityLabel[previewValues.visibility] : undefined}
-            skeletonWidth="40%"
+            value={previewValues?.visibility ? visibilityLabelMap[previewValues.visibility] : undefined}
           />
           <ReflectionSection reflection={previewValues?.reflection} />
           <QuotesSection quotes={quotes} />
