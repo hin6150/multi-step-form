@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import { FieldValues, Path, useFormContext, useWatch } from 'react-hook-form'
 import {
   errorText,
@@ -21,6 +22,7 @@ type Props<T extends FieldValues, V extends string> = {
 
 export function RHFSegmented<T extends FieldValues, V extends string>(props: Props<T, V>) {
   const { name, label, options, onChange } = props
+  const labelId = useId()
   const {
     register,
     control,
@@ -32,8 +34,10 @@ export function RHFSegmented<T extends FieldValues, V extends string>(props: Pro
 
   return (
     <div css={fieldStyle}>
-      <p css={labelStyle}>{label}</p>
-      <div css={segGroup}>
+      <p css={labelStyle} id={labelId}>
+        {label}
+      </p>
+      <div css={segGroup} role="radiogroup" aria-labelledby={labelId}>
         {options.map((opt) => (
           <label key={String(opt.value)} css={segItem}>
             <input

@@ -124,16 +124,28 @@ export const segGroup = (theme: Theme) => css`
   }
 `
 
-export const segItem = css`
+export const segItem = (theme: Theme) => css`
   display: block;
   flex: 1;
+  position: relative;
+
+  input:focus-visible + span {
+    outline: 2px solid ${theme.color.focus};
+    outline-offset: 3px;
+    border-radius: ${theme.radius.md}px;
+    box-sizing: border-box;
+  }
 `
 export const visuallyHidden = css`
   position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 `
 
 export const segButton = (theme: Theme) => css`
@@ -148,6 +160,7 @@ export const segButton = (theme: Theme) => css`
   font-size: 14px;
   font-weight: 600;
   line-height: 20px;
+  cursor: pointer;
   transition:
     background 0.15s,
     border-color 0.15s,
