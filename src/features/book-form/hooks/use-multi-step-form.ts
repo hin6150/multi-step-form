@@ -70,18 +70,18 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
       const fieldName = String(field)
 
       if (fieldName === 'quotes') {
-        const quotes = getValues('quotes' as Path<TValues>) as unknown[]
+        const quotes = getValues('quotes' as Path<TValues>)
         if (Array.isArray(quotes) && quotes.length > 0) {
           const firstQuote = quotes[0]
           if (firstQuote && typeof firstQuote === 'object') {
             if ('content' in firstQuote) {
-              return 'quotes.0.content' as Path<TValues>
+              return 'quotes.0.content'
             }
           }
         }
       }
 
-      return fieldName as Path<TValues>
+      return fieldName
     },
     [getValues]
   )
@@ -92,7 +92,7 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
   }, [])
 
   useEffect(() => {
-    const fields = steps[currentIndex]?.fields as Path<TValues>[] | undefined
+    const fields = steps[currentIndex]?.fields
     if (!fields || fields.length === 0) return
 
     const focusable = toFocusablePath(fields[0])
@@ -101,7 +101,7 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
 
   const clearStepErrors = useCallback(
     (index: number) => {
-      const fields = steps[index]?.fields as Path<TValues>[] | undefined
+      const fields = steps[index]?.fields
       if (!fields || fields.length === 0) return
       clearErrors(fields)
     },
@@ -117,7 +117,7 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
         return true
       }
 
-      const fields = (currentStep?.fields ?? []) as Path<TValues>[]
+      const fields = currentStep?.fields ?? []
       const schema = currentStep?.schema
 
       if (schema) {
