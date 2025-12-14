@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { FieldValues, Path, UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -40,7 +40,65 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
 }: UseStepControllerOptions<TValues, TComponentId>) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const totalSteps = steps.length
-  const { trigger, getValues, setError, clearErrors } = methods
+  const { trigger, getValues, setError, clearErrors, setFocus } = methods
+
+  const focusField = useCallback(
+    (field?: Path<TValues> | string) => {
+      if (!field) return
+      const focusTarget = String(field) as Path<TValues>
+      const focusExecutor =
+        typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function'
+          ? window.requestAnimationFrame.bind(window)
+          : (cb: FrameRequestCallback) => {
+              setTimeout(() => cb(Date.now()), 0)
+            }
+
+      focusExecutor(() => {
+        try {
+          setFocus(focusTarget, { shouldSelect: true })
+        } catch (error) {
+          console.warn('Failed to focus field', focusTarget, error)
+        }
+      })
+    },
+    [setFocus]
+  )
+
+  const toFocusablePath = useCallback(
+    (field?: Path<TValues> | string) => {
+      if (!field) return undefined
+      const fieldName = String(field)
+
+      if (fieldName === 'quotes') {
+        const quotes = getValues('quotes' as Path<TValues>) as unknown[]
+        if (Array.isArray(quotes) && quotes.length > 0) {
+          const firstQuote = quotes[0]
+          if (firstQuote && typeof firstQuote === 'object') {
+            if ('content' in firstQuote) {
+              return 'quotes.0.content' as Path<TValues>
+            }
+          }
+        }
+      }
+
+      return fieldName as Path<TValues>
+    },
+    [getValues]
+  )
+
+  const scrollToTop = useCallback(() => {
+    if (typeof window === 'undefined') return
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
+
+  useEffect(() => {
+    const fields = steps[currentIndex]?.fields as Path<TValues>[] | undefined
+    if (!fields || fields.length === 0) return
+
+    const focusable = toFocusablePath(fields[0])
+    focusField(focusable)
+  }, [currentIndex, focusField, steps, toFocusablePath])
+
   const clearStepErrors = useCallback(
     (index: number) => {
       const fields = steps[index]?.fields as Path<TValues>[] | undefined
@@ -70,8 +128,12 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
         if (!result.success) {
           const issues = result.error.issues
           const fieldToMessage: Record<string, string> = {}
+          let firstIssuePath: string | undefined
           issues.forEach((issue) => {
             const key = issue.path.join('.')
+            if (!firstIssuePath && key) {
+              firstIssuePath = key
+            }
             if (key && !fieldToMessage[key]) {
               fieldToMessage[key] = issue.message
             }
@@ -80,15 +142,31 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
             const name = fieldName as Path<TValues>
             if (message) setError(name, { type: 'manual', message })
           })
+          if (firstIssuePath) {
+            const focusable = toFocusablePath(firstIssuePath)
+            focusField(focusable)
+          }
           return false
         }
         return true
       }
 
-      if (fields.length > 0) return trigger(fields, { shouldFocus: true })
-      return trigger(undefined, { shouldFocus: true })
+      if (fields.length > 0) {
+        const isValid = await trigger(fields, { shouldFocus: true })
+        if (!isValid) {
+          const firstField = toFocusablePath(fields[0])
+          focusField(firstField)
+        }
+        return isValid
+      }
+      const isValid = await trigger(undefined, { shouldFocus: true })
+      if (!isValid) {
+        const focusable = toFocusablePath(steps[index]?.fields?.[0])
+        focusField(focusable)
+      }
+      return isValid
     },
-    [steps, trigger, getValues, setError, clearErrors]
+    [clearErrors, focusField, getValues, steps, toFocusablePath, trigger, setError]
   )
 
   const goNext = useCallback(async () => {
@@ -96,14 +174,21 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
     const ok = await validateStep(currentIndex)
     if (!ok) return
     clearStepErrors(currentIndex)
-    setCurrentIndex((prev) => Math.min(prev + 1, totalSteps - 1))
-  }, [clearStepErrors, currentIndex, totalSteps, validateStep])
+    setCurrentIndex((prev) => {
+      const nextIndex = Math.min(prev + 1, totalSteps - 1)
+      if (nextIndex !== prev) {
+        scrollToTop()
+      }
+      return nextIndex
+    })
+  }, [clearStepErrors, currentIndex, totalSteps, validateStep, scrollToTop])
 
   const goPrev = useCallback(() => {
     if (currentIndex <= 0) return
     clearStepErrors(currentIndex)
     setCurrentIndex((prev) => Math.max(prev - 1, 0))
-  }, [clearStepErrors, currentIndex])
+    scrollToTop()
+  }, [clearStepErrors, currentIndex, scrollToTop])
 
   const goTo = useCallback(
     async (next: number) => {
@@ -121,9 +206,13 @@ export function useStepController<TValues extends FieldValues, TComponentId exte
       }
 
       clearStepErrors(currentIndex)
-      setCurrentIndex(next)
+      setCurrentIndex((prev) => {
+        if (prev === next) return prev
+        scrollToTop()
+        return next
+      })
     },
-    [allowFutureClick, clearStepErrors, currentIndex, totalSteps, validateStep]
+    [allowFutureClick, clearStepErrors, currentIndex, scrollToTop, totalSteps, validateStep]
   )
 
   const state: StepState = useMemo(
