@@ -1,7 +1,8 @@
 import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document'
 import createEmotionServer from '@emotion/server/create-instance'
-import { CacheProvider } from '@emotion/react'
 import createEmotionCache from '@/lib/create-emotion-cache'
+import { MyAppProps } from './_app'
+import { ComponentType, ComponentProps } from 'react'
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -11,13 +12,9 @@ export default class MyDocument extends Document {
 
     ctx.renderPage = () =>
       originalRenderPage({
-        enhanceApp: (App) =>
+        enhanceApp: (App: ComponentType<ComponentProps<ComponentType<MyAppProps>>>) =>
           function EnhanceApp(props) {
-            return (
-              <CacheProvider value={cache}>
-                <App {...props} />
-              </CacheProvider>
-            )
+            return <App emotionCache={cache} {...props} />
           },
       })
 

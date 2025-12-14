@@ -2,15 +2,19 @@ import type { AppProps } from 'next/app'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
 import { CacheProvider, ThemeProvider } from '@emotion/react'
+import type { EmotionCache } from '@emotion/cache'
 import createEmotionCache from '@/lib/create-emotion-cache'
 import { appTheme } from '@/styles/theme'
 import { GlobalStyles } from '@/styles/globals'
 
 const clientSideEmotionCache = createEmotionCache()
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export interface MyAppProps extends AppProps {
+  emotionCache?: EmotionCache
+}
+
+export default function MyApp({ Component, pageProps, emotionCache = clientSideEmotionCache }: MyAppProps) {
   const [queryClient] = useState(() => new QueryClient())
-  const [emotionCache] = useState(clientSideEmotionCache)
 
   return (
     <CacheProvider value={emotionCache}>

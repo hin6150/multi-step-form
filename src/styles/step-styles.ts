@@ -126,7 +126,6 @@ export const stepMainArea = (t: Theme) => css`
   display: flex;
   flex-direction: column;
   min-height: 0;
-  overflow-y: auto;
   padding: ${t.spacing(3)} 0 ${t.spacing(10)};
   scroll-padding-top: ${t.spacing(4)};
   -ms-overflow-style: none;
